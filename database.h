@@ -12,12 +12,17 @@ typedef struct entry_t {
     V value;
 } Entry;
 
+#define CMP_EQ(a, b) (strcmp((a), (b)) == 0)
+#define CMP_LEQ(a, b) (strcmp((a), (b)) <= 0)
+
 typedef struct dict_t {
     size_t size, capacity;
     Entry **data;
 } Dict;
 
 Dict *createDict();
+
+__inline static int find(K key, Entry** data, size_t size, size_t *index);
 
 
 #endif //RANDOM_TEXT_GENERATOR_DATABASE_H

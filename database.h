@@ -2,6 +2,8 @@
 #define RANDOM_TEXT_GENERATOR_DATABASE_H
 
 
+#include <malloc.h>
+#include <string.h>
 #include <stdlib.h>
 
 typedef char *K;
@@ -22,7 +24,7 @@ typedef struct dict_t {
 
 Dict *createDict();
 
-__inline static int find(K key, Entry** data, size_t size, size_t *index);
+__inline static int find(K key, Entry **data, size_t size, size_t *index);
 
 
 #endif //RANDOM_TEXT_GENERATOR_DATABASE_H

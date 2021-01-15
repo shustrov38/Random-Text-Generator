@@ -1,8 +1,6 @@
-#include <malloc.h>
-#include <string.h>
 #include "database.h"
 
-
+// create Dict structure with valid data
 Dict *createDict() {
     Dict *dict = (Dict *) malloc(sizeof(Dict));
     dict->capacity = 1;
@@ -11,10 +9,8 @@ Dict *createDict() {
     return dict;
 }
 
-/*
- * Returns 1 if such a key already exists, otherwise returns 0
- * {*index} is the position of founded key
- * */
+// Returns 1 if such a key already exists, otherwise returns 0
+// {*index} is the position of founded key
 __inline static int find(K key, Entry **data, size_t size, size_t *index) {
     int l = -1, r = size;
     while (r - l > 1) {

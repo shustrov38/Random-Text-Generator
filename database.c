@@ -1,6 +1,6 @@
 #include "database.h"
 
-// create Dict structure with valid data
+
 Dict *createDict() {
     Dict *dict = (Dict *) malloc(sizeof(Dict));
     dict->capacity = 1;
@@ -23,4 +23,28 @@ __inline static int find(K key, Entry **data, size_t size, size_t *index) {
     }
     *index = r;
     return (r != size ? CMP_EQ(key, data[r]->key) : 0);
+}
+
+int raw_put(Dict *dict, Entry *e) {
+    return 0;
+}
+
+int put(Dict *dict, K key, V value) {
+    return 0;
+}
+
+V *get(Dict *dict, K key, int *wasFound) {
+    return NULL;
+}
+
+int updatePrefix(Dict *dict, K key) {
+    return 0;
+}
+
+int updateSuffix(Dict *dict, K key) {
+    return 0;
+}
+
+int updatePostfix(Dict *dict, K key) {
+    return 0;
 }

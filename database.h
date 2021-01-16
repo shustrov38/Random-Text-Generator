@@ -6,8 +6,16 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define MAX_STR_LEN 100
+
+typedef struct templates {
+    char **prefix;
+    char **suffix;
+    char **postfix;
+} Templates;
+
 typedef char *K;
-typedef char **V;
+typedef Templates *V;
 
 typedef struct entry_t {
     K key;
@@ -26,5 +34,16 @@ Dict *createDict();
 
 __inline static int find(K key, Entry **data, size_t size, size_t *index);
 
+int raw_put(Dict *dict, Entry *e);
+
+int put(Dict *dict, K key, V value);
+
+V *get(Dict *dict, K key, int *wasFound);
+
+int updatePrefix(Dict *dict, K key);
+
+int updateSuffix(Dict *dict, K key);
+
+int updatePostfix(Dict *dict, K key);
 
 #endif //RANDOM_TEXT_GENERATOR_DATABASE_H

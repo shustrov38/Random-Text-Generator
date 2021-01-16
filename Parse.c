@@ -18,9 +18,9 @@ void parse(Dict *dict) {
 
     char *action = (char *) malloc(sizeof(char) * MAX_STR_LEN);
 
-    int PrefCount;
-    int SufCount;
-    int PostCount;
+    int prefCount = 0;
+    int sufCount = 0;
+    int postCount = 0;
 
     char **prefix = createArr();
     char **suffix = createArr();
@@ -29,44 +29,59 @@ void parse(Dict *dict) {
     while (!feof(in)) {
         fscanf(in, "#%s", action);
 
-        char trash[MAX_STR_LEN];
+        char check[MAX_STR_LEN];
 
-        fscanf(in, "%s %d", trash, &PrefCount);
-        for (int i = 0; i < PrefCount; ++i) {
-            fscanf(in, "%s", prefix[i]);
+        fscanf(in, "%*s");
+        while (1){
+            fscanf(in, "%s", check);
+            if (strcmp(check, "--") == 0){
+                break;
+            } else {
+                strcpy(prefix[prefCount], check);
+                prefCount++;
+            }
         }
 
-        fscanf(in, "%s %d", trash, &SufCount);
-        for (int i = 0; i < SufCount; ++i) {
-            fscanf(in, "%s", suffix[i]);
+        fscanf(in, "%*s");
+        while (1){
+            fscanf(in, "%s", check);
+            if (strcmp(check, "--") == 0){
+                break;
+            } else {
+                strcpy(suffix[sufCount], check);
+                sufCount++;
+            }
         }
 
-        fscanf(in, "%s %d", trash, &PostCount);
-        for (int i = 0; i < PostCount; ++i) {
-            fscanf(in, "%s", postfix[i]);
+        fscanf(in, "%*s");
+        while (1){
+            fscanf(in, "%s", check);
+            if (strcmp(check, "--") == 0){
+                break;
+            } else {
+                strcpy(postfix[postCount], check);
+                postCount++;
+            }
+
         }
     }
 
-    initSpecificKey(dict, action);
-    //printf("%s", dict->data[0]->key);
-    //updatePrefix(dict, action, prefix, PrefCount);
-    //updateSuffix(dict, action, suffix, SufCount);
-    //updatePostfix(dict, action, postfix, PostCount);
+    //initSpecificKey(dict, action);
 
-    printCollectedData(dict, action);
+    //printCollectedData(dict, action);
 
-//    printf("%s\n", action);
-//    printf("Pref %d Suf %d Postf %d\n", PrefCount, SufCount, PostCount);
-//    for (int i = 0; i < PrefCount; ++i){
-//        printf("%s ", prefix[i]);
-//    } printf("\n");
-//
-//    for (int i = 0; i < SufCount; ++i){
-//        printf("%s ", suffix[i]);
-//    } printf("\n");
-//
-//    for (int i = 0; i < PostCount; ++i){
-//        printf("%s ", postfix[i]);
-//    } printf("\n");
+    printf("%s\n", action);
+    printf("Pref %d Suf %d Postf %d\n", prefCount, sufCount, postCount);
+    for (int i = 0; i < prefCount; ++i){
+        printf("%s ", prefix[i]);
+    } printf("\n");
+
+    for (int i = 0; i < sufCount; ++i){
+        printf("%s ", suffix[i]);
+    } printf("\n");
+
+    for (int i = 0; i < postCount; ++i){
+        printf("%s ", postfix[i]);
+    } printf("\n");
 
 }

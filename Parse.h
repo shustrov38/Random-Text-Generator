@@ -7,15 +7,14 @@
  *
  * #action
  * ##prefix
- * #n (n -кол-во слов)
  * word (xN раз)
+ * --
  * ##suffix
- * #n (n -кол-во слов)
  * word (xN раз)
+ * --
  * ##postfix
- * n (n -кол-во слов)
  * word (xN раз)
- *
+ *--
  */
 
 void parse(Dict *dict);

@@ -1,4 +1,4 @@
-#include "Parse.h"
+#include "parse.h"
 
 char **createArray2D() {
     char **t = (char **) malloc(sizeof(char *) * MAX_ARR_LEN);

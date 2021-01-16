@@ -66,7 +66,8 @@ int rawPut(Dict *dict, Entry *e) {
 int initSpecificKey(Dict *dict, K key) {
     Entry *e = (Entry *) malloc(sizeof(Entry));
     e->key = key;
-    e->value = NULL;
+    Templates t = {NULL, 0, NULL, 0, NULL, 0};
+    e->value = &t;
     int result = rawPut(dict, e);
     if (!result) {
         FREE_ENTRY(&e);

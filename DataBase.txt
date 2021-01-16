@@ -1,13 +1,16 @@
 #start
-##prefix 4
+##prefix
 fast
 bad
 good
 lose
-##suffix 3
+--
+##suffix
 second
 one
 again
-##postfix 2
+--
+##postfix
 intresting
 once
+--

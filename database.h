@@ -48,12 +48,6 @@ int initSpecificKey(Dict *dict, K key);
 
 V get(Dict *dict, K key, int *wasFound);
 
-int updatePrefix(Dict *dict, K key, char **value, size_t size);
-
-int updateSuffix(Dict *dict, K key, char **value, size_t size);
-
-int updatePostfix(Dict *dict, K key, char **value, size_t size);
-
 int printCollectedData(Dict *dict, K key);
 
 #endif //RANDOM_TEXT_GENERATOR_DATABASE_H

@@ -91,42 +91,6 @@ V get(Dict *dict, K key, int *wasFound) {
     return returnValue;
 }
 
-int updatePrefix(Dict *dict, K key, char **value, size_t size) {
-    int wasFound;
-    V collectedValue = get(dict, key, &wasFound);
-    if (!wasFound) {
-        return 0;
-    } else {
-        collectedValue->prefix = value;
-        collectedValue->prefixSize = size;
-    }
-    return 1;
-}
-
-int updateSuffix(Dict *dict, K key, char **value, size_t size) {
-    int wasFound;
-    V collectedValue = get(dict, key, &wasFound);
-    if (!wasFound) {
-        return 0;
-    } else {
-        collectedValue->suffix = value;
-        collectedValue->suffixSize = size;
-    }
-    return 1;
-}
-
-int updatePostfix(Dict *dict, K key, char **value, size_t size) {
-    int wasFound;
-    V collectedValue = get(dict, key, &wasFound);
-    if (!wasFound) {
-        return 0;
-    } else {
-        collectedValue->postfix = value;
-        collectedValue->postfixSize = size;
-    }
-    return 1;
-}
-
 int printCollectedData(Dict *dict, K key) {
     printf("[DEBUG DB]:\n");
     int wasFound;

@@ -1,13 +1,6 @@
 #include "database.h"
 
 
-__inline static void freeEntry(Entry **e) {
-    free((*e)->key);
-    free((*e)->value);
-    free(*e);
-//    e = NULL;
-}
-
 Dict *createDict() {
     Dict *dict = (Dict *) malloc(sizeof(Dict));
     dict->capacity = 1;
@@ -18,7 +11,7 @@ Dict *createDict() {
 
 // Returns 1 if such a key already exists, otherwise returns 0
 // {*index} is the position of founded key
-__inline static int find(K key, Entry **data, size_t size, size_t *index) {
+inline static int find(K key, Entry **data, size_t size, size_t *index) {
     int l = -1, r = size;
     while (r - l > 1) {
         int m = l + (r - l) / 2;
@@ -33,7 +26,6 @@ __inline static int find(K key, Entry **data, size_t size, size_t *index) {
 }
 
 int rawPut(Dict *dict, Entry *e) {
-    size_t l = -1, r = dict->size;
     size_t index;
     int contains;
 
@@ -66,13 +58,16 @@ int rawPut(Dict *dict, Entry *e) {
 int initSpecificKey(Dict *dict, K key) {
     Entry *e = (Entry *) malloc(sizeof(Entry));
     e->key = key;
-    Templates t = {NULL, 0, NULL, 0, NULL, 0};
-    e->value = &t;
-    int result = rawPut(dict, e);
-    if (!result) {
-        //FREE_ENTRY(&e);
-    }
-    return result;
+    e->value = (Templates *) malloc(sizeof(Templates));
+
+    e->value->prefix = NULL;
+    e->value->prefixSize = 0;
+    e->value->suffix = NULL;
+    e->value->suffixSize = 0;
+    e->value->postfix = NULL;
+    e->value->postfixSize = 0;
+
+    return rawPut(dict, e);
 }
 
 V get(Dict *dict, K key, int *wasFound) {
@@ -91,6 +86,23 @@ V get(Dict *dict, K key, int *wasFound) {
     return returnValue;
 }
 
+int updateData(Dict *dict, K key, char **prefix, size_t prefixSize, char **suffix, size_t suffixSize, char **postfix,
+               size_t postfixSize) {
+    int wasFound;
+    V collectedData = get(dict, key, &wasFound);
+    if (!wasFound) {
+        return 0;
+    } else {
+        collectedData->prefix = prefix;
+        collectedData->prefixSize = prefixSize;
+        collectedData->suffix = suffix;
+        collectedData->suffixSize = suffixSize;
+        collectedData->postfix = postfix;
+        collectedData->postfixSize = postfixSize;
+    }
+    return 1;
+}
+
 int printCollectedData(Dict *dict, K key) {
     printf("[DEBUG DB]:\n");
     int wasFound;
@@ -100,7 +112,6 @@ int printCollectedData(Dict *dict, K key) {
         return 0;
     } else {
         printf("> Stored data for key {%s}:\n", key);
-
         if (collectedValue) {
             printf("> prefix: [");
             for (size_t i = 0; i < collectedValue->prefixSize; ++i) {

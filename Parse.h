@@ -1,7 +1,13 @@
 #ifndef RANDOM_TEXT_GENERATOR_PARSE_H
 #define RANDOM_TEXT_GENERATOR_PARSE_H
 
+
+#include <string.h>
+#include <stdio.h>
 #include "database.h"
+
+#define MAX_STR_LEN 100
+#define MAX_ARR_LEN 100
 
 /* WordDataBase
  *
@@ -17,6 +23,7 @@
  *--
  */
 
-void parse(Dict *dict);
+int parse(char *filename, Dict *dict);
+
 
 #endif //RANDOM_TEXT_GENERATOR_PARSE_H

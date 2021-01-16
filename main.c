@@ -6,6 +6,6 @@
 int main() {
     Dict *dict = createDict();
 
-    parse(dict);
+    parse("../DataBase.txt", dict);
     return EXIT_SUCCESS;
 }

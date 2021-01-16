@@ -40,10 +40,10 @@ int put(Dict *dict, K key, V value);
 
 V *get(Dict *dict, K key, int *wasFound);
 
-int updatePrefix(Dict *dict, K key);
+int updatePrefix(Dict *dict, K key, char **value);
 
-int updateSuffix(Dict *dict, K key);
+int updateSuffix(Dict *dict, K key, char **value);
 
-int updatePostfix(Dict *dict, K key);
+int updatePostfix(Dict *dict, K key, char **value);
 
 #endif //RANDOM_TEXT_GENERATOR_DATABASE_H

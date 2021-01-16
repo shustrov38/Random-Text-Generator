@@ -12,13 +12,13 @@ int main() {
         strcpy(a[i], "kebab");
     }
 
-    Templates t = {a, a, a};
+    Templates t = {a, 10, a, 10, a, 10};
     Entry e = {"Key1", &t};
 
-    int res = raw_put(dict, &e);
+    int res = rawPut(dict, &e);
     printf("%d\n", res);
 
-    printf("%s", dict->data[0]->key);
+    printCollectedData(dict, "Key1");
 
     return EXIT_SUCCESS;
 }

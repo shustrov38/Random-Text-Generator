@@ -1,7 +1,7 @@
 #ifndef RANDOM_TEXT_GENERATOR_DATABASE_H
 #define RANDOM_TEXT_GENERATOR_DATABASE_H
 
-
+#include <stdio.h>
 #include <malloc.h>
 #include <string.h>
 #include <stdlib.h>
@@ -10,8 +10,11 @@
 
 typedef struct templates {
     char **prefix;
+    size_t prefixSize;
     char **suffix;
+    size_t suffixSize;
     char **postfix;
+    size_t postfixSize;
 } Templates;
 
 typedef char *K;
@@ -21,6 +24,10 @@ typedef struct entry_t {
     K key;
     V value;
 } Entry;
+
+__inline static void freeEntry(Entry **e);
+
+#define FREE_ENTRY(e) freeEntry(e)
 
 #define CMP_EQ(a, b) (strcmp((a), (b)) == 0)
 #define CMP_LEQ(a, b) (strcmp((a), (b)) <= 0)
@@ -34,16 +41,18 @@ Dict *createDict();
 
 __inline static int find(K key, Entry **data, size_t size, size_t *index);
 
-int raw_put(Dict *dict, Entry *e);
+int rawPut(Dict *dict, Entry *e);
 
-int put(Dict *dict, K key, V value);
+int initSpecificKey(Dict *dict, K key);
 
-V *get(Dict *dict, K key, int *wasFound);
+V get(Dict *dict, K key, int *wasFound);
 
-int updatePrefix(Dict *dict, K key, char **value);
+int updatePrefix(Dict *dict, K key, char **value, size_t size);
 
-int updateSuffix(Dict *dict, K key, char **value);
+int updateSuffix(Dict *dict, K key, char **value, size_t size);
 
-int updatePostfix(Dict *dict, K key, char **value);
+int updatePostfix(Dict *dict, K key, char **value, size_t size);
+
+int printCollectedData(Dict *dict, K key);
 
 #endif //RANDOM_TEXT_GENERATOR_DATABASE_H

@@ -1,0 +1,13 @@
+#start
+##prefix 4
+fast
+bad
+good
+lose
+##suffix 3
+second
+one
+again
+##postfix 2
+intresting
+once

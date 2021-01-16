@@ -1,6 +1,7 @@
 #ifndef RANDOM_TEXT_GENERATOR_DATABASE_H
 #define RANDOM_TEXT_GENERATOR_DATABASE_H
 
+
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>

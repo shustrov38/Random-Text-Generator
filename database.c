@@ -26,7 +26,34 @@ __inline static int find(K key, Entry **data, size_t size, size_t *index) {
 }
 
 int raw_put(Dict *dict, Entry *e) {
-    return 0;
+    size_t l = -1, r = dict->size;
+    size_t index;
+    int contains;
+
+    if (dict->size == 0) {
+        dict->data[0] = e;
+        dict->size++;
+        return 0;
+    }
+
+    contains = find(e->key, dict->data, dict->size, &index);
+    if (contains) {
+        return 0;
+    }
+
+    if (dict->size >= dict->capacity) {
+        dict->capacity *= 2;
+        dict->data = (Entry **) realloc(dict->data, dict->capacity * sizeof(Entry *));
+        if (dict == NULL) {
+            exit(-5);
+        }
+    }
+
+    memcpy(&(dict->data[index]), &(dict->data[index + 1]), (dict->size - index) * sizeof(Entry *));
+    dict->data[index] = e;
+
+    dict->size++;
+    return 1;
 }
 
 int put(Dict *dict, K key, V value) {
@@ -37,14 +64,14 @@ V *get(Dict *dict, K key, int *wasFound) {
     return NULL;
 }
 
-int updatePrefix(Dict *dict, K key) {
+int updatePrefix(Dict *dict, K key, char **value) {
     return 0;
 }
 
-int updateSuffix(Dict *dict, K key) {
+int updateSuffix(Dict *dict, K key, char **value) {
     return 0;
 }
 
-int updatePostfix(Dict *dict, K key) {
+int updatePostfix(Dict *dict, K key, char **value) {
     return 0;
 }

@@ -1,7 +1,7 @@
 #ifndef RANDOM_TEXT_GENERATOR_PARSE_H
 #define RANDOM_TEXT_GENERATOR_PARSE_H
 
-#endif //RANDOM_TEXT_GENERATOR_PARSE_H
+#include "database.h"
 
 /* WordDataBase
  *
@@ -18,4 +18,6 @@
  *
  */
 
-void parse();
+void parse(Dict *dict);
+
+#endif //RANDOM_TEXT_GENERATOR_PARSE_H

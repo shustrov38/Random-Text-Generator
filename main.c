@@ -5,6 +5,7 @@
 
 int main() {
     Dict *dict = createDict();
+
     parse(dict);
     return EXIT_SUCCESS;
 }

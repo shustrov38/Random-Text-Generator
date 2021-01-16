@@ -70,7 +70,7 @@ int initSpecificKey(Dict *dict, K key) {
     e->value = &t;
     int result = rawPut(dict, e);
     if (!result) {
-        FREE_ENTRY(&e);
+        //FREE_ENTRY(&e);
     }
     return result;
 }

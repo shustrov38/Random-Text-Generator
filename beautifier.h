@@ -26,7 +26,7 @@ typedef struct word
 
 typedef struct data
 {
-    WORD **words;
+    WORD *words;
     size_t size;
     size_t capacity;
 }DATA;
@@ -39,5 +39,7 @@ void update_word_syn(DATA *data, char *synonym);
 
 void update_word_adj(DATA *data, char *adjective);
 
-void parse();
+void parse(FILE *in, DATA *data);
+
+void print_data(DATA *data);
 

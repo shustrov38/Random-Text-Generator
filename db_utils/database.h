@@ -4,8 +4,11 @@
 
 #include <stdio.h>
 #include <malloc.h>
-#include <string.h>
 #include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+
+#define DICT_INIT_CAPACITY 4
 
 /* database template
  #action
@@ -20,45 +23,23 @@
  --
  */
 
-#define MAX_STR_LEN 100
-#define MAX_ARR_LEN 100
-
-typedef struct templates {
-    char **prefix;
-    size_t prefixSize;
-    char **suffix;
-    size_t suffixSize;
-    char **postfix;
-    size_t postfixSize;
-} Templates;
-
-typedef char *K;
-typedef Templates *V;
-
-typedef struct entry_t {
-    K key;
-    V value;
+typedef struct {
+    char *key;
+    char **prefix, **suffix, **postfix;
+    int prefixSize, suffixSize, postfixSize;
 } Entry;
 
-#define CMP_EQ(a, b) (strcmp((a), (b)) == 0)
-#define CMP_LEQ(a, b) (strcmp((a), (b)) <= 0)
-
-typedef struct dict_t {
-    size_t size, capacity;
+typedef struct {
+    int capacity, size;
     Entry **data;
-} Dict;
+} TemplateDictionary;
 
-Dict *createDict();
+TemplateDictionary *createTemplateDictionary();
 
-int loadDict(char *filename, Dict *dict, int showDebug);
+void updateTemplateDictionary(TemplateDictionary *dict, Entry *e);
 
-int initSpecificKey(Dict *dict, K key);
+void printTemplateDictionary(TemplateDictionary *dict);
 
-V get(Dict *dict, K key, int *wasFound);
-
-int updateData(Dict *dict, K key, char **prefix, size_t prefixSize, char **suffix, size_t suffixSize, char **postfix,
-               size_t postfixSize);
-
-int printCollectedData(Dict *dict, K key);
+void loadTemplateDictionary(char *filename, TemplateDictionary *dict, int showDebug);
 
 #endif //RANDOM_TEXT_GENERATOR_DATABASE_H

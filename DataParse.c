@@ -31,25 +31,26 @@ void InfoParse(char *filename){
     initStruct(RACE);
 
     while (!feof(in)){
+        char curString[MAX_STR_LEN];
         int curLap; char curName[MAX_STR_LEN], curAct[MAX_STR_LEN];
-        fscanf(in, "%d %s %s", &curLap, curName, curAct);
-        printf("%d %s %s\n", curLap, curName, curAct);
-        //С‚СѓС‚ РЅР°РґРѕ РІСЃРµ action РїСЂРѕРС„Р°С‚СЊ
-        //РїРѕРєР° РµСЃС‚СЊ С‚РѕР»СЊРєРѕ РґР»СЏ start
-        if (strcmp(curAct, "СЃС‚Р°СЂС‚") == 0) {
+        fgets(curString, MAX_STR_LEN, in);
+        sscanf(curString, "%d %s %s", &curLap, curName, curAct);
+        //тут надо все action проИфать
+        //пока есть только для start
+        if (strcmp(curAct, "старт") == 0) {
             char pos[MAX_STR_LEN];
-            fscanf(in, "%s", pos);
-            printf("%s", pos);
+            sscanf(curString, "%s", pos);
+            //printf("%s\n", pos);
             RACE[SIZE].lap = curLap;
             strcpy(RACE[SIZE].name, curName);
             strcpy(RACE[SIZE].action, curAct);
             strcpy(RACE[SIZE].notice[0], pos);
             RACE[SIZE].noteSize++;
+
         }
         SIZE++;
     }
 
-    printf("YES");
     for (int i = 0; i < SIZE; ++i){
         printf("%d  %s  %s  ", RACE[i].lap, RACE[i].name, RACE[i].action);
         if (RACE[i].noteSize > 0){

@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include "beautifier.h"
 
-int main() {
-    printf("Hello, World!\n");
-    return 0;
+int main()
+{
+    DATA data;
+    data=create_data();
 }

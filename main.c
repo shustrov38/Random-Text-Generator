@@ -1,6 +1,10 @@
 #include <stdio.h>
+#include <locale.h>
+#include "DataParse.h"
+
 
 int main() {
-    printf("Hello, World!\n");
+    setlocale(LC_ALL, "Rus");
+    InfoParse("../RaceInfo.txt");
     return 0;
 }

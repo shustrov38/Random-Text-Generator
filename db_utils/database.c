@@ -9,6 +9,94 @@ Dict *createDict() {
     return dict;
 }
 
+char **createArray2D() {
+    char **t = (char **) malloc(sizeof(char *) * MAX_ARR_LEN);
+    for (int i = 0; i < MAX_ARR_LEN; ++i) {
+        t[i] = (char *) malloc(sizeof(char) * MAX_STR_LEN);
+    }
+    return t;
+}
+
+int loadDict(char *filename, Dict *dict, int showDebug) {
+    FILE *in = fopen(filename, "r");
+
+    char *action = (char *) malloc(sizeof(char) * MAX_STR_LEN);
+
+    int prefixSize, suffixSize, postfixSize;
+
+    char **prefix = createArray2D();
+    char **suffix = createArray2D();
+    char **postfix = createArray2D();
+
+    int result = 1;
+    while (!feof(in)) {
+        prefixSize = 0;
+        suffixSize = 0;
+        postfixSize = 0;
+
+        fscanf(in, "#%s", action);
+
+        char check[MAX_STR_LEN];
+
+        fscanf(in, "%*s");
+        while (1) {
+            fscanf(in, "%s", check);
+            if (strcmp(check, "--") == 0) {
+                break;
+            } else {
+                strcpy(prefix[prefixSize], check);
+                prefixSize++;
+            }
+        }
+
+        fscanf(in, "%*s");
+        while (1) {
+            fscanf(in, "%s", check);
+            if (strcmp(check, "--") == 0) {
+                break;
+            } else {
+                strcpy(suffix[suffixSize], check);
+                suffixSize++;
+            }
+        }
+
+        fscanf(in, "%*s");
+        while (1) {
+            fscanf(in, "%s", check);
+            if (strcmp(check, "--") == 0) {
+                break;
+            } else {
+                strcpy(postfix[postfixSize], check);
+                postfixSize++;
+            }
+
+        }
+
+        initSpecificKey(dict, action);
+        result *= updateData(dict, action, prefix, prefixSize, suffix, suffixSize, postfix, postfixSize);
+        if (showDebug) {
+            printCollectedData(dict, action);
+        }
+    }
+
+//    printf("%s\n", action);
+//    printf("Pref %d Suf %d Postf %d\n", prefixSize, suffixSize, postfixSize);
+//    for (int i = 0; i < prefixSize; ++i){
+//        printf("%s ", prefix[i]);
+//    } printf("\n");
+//
+//    for (int i = 0; i < suffixSize; ++i){
+//        printf("%s ", suffix[i]);
+//    } printf("\n");
+//
+//    for (int i = 0; i < postfixSize; ++i){
+//        printf("%s ", postfix[i]);
+//    } printf("\n");
+
+    fclose(in);
+    return result;
+}
+
 // Returns 1 if such a key already exists, otherwise returns 0
 // {*index} is the position of founded key
 inline static int find(K key, Entry **data, size_t size, size_t *index) {
@@ -25,6 +113,7 @@ inline static int find(K key, Entry **data, size_t size, size_t *index) {
     return (r != size ? CMP_EQ(key, data[r]->key) : 0);
 }
 
+// put entry value into sorted sequence (0 if exists, otherwise 1)
 int rawPut(Dict *dict, Entry *e) {
     size_t index;
     int contains;

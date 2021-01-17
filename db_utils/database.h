@@ -7,6 +7,22 @@
 #include <string.h>
 #include <stdlib.h>
 
+/* database template
+ #action
+ ##prefix
+ word (xN раз)
+ --
+ ##suffix
+ word (xN раз)
+ --
+ ##postfix
+ word (xN раз)
+ --
+ */
+
+#define MAX_STR_LEN 100
+#define MAX_ARR_LEN 100
+
 typedef struct templates {
     char **prefix;
     size_t prefixSize;
@@ -33,6 +49,8 @@ typedef struct dict_t {
 } Dict;
 
 Dict *createDict();
+
+int loadDict(char *filename, Dict *dict, int showDebug);
 
 int initSpecificKey(Dict *dict, K key);
 

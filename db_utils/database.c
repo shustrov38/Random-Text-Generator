@@ -34,7 +34,7 @@ int loadDict(char *filename, Dict *dict, int showDebug) {
         suffixSize = 0;
         postfixSize = 0;
 
-        fscanf(in, "#%s", action);
+        fscanf(in, "%*c%s", action);
 
         char check[MAX_STR_LEN];
 
@@ -71,6 +71,7 @@ int loadDict(char *filename, Dict *dict, int showDebug) {
             }
 
         }
+        fscanf(in, "%*c");
 
         initSpecificKey(dict, action);
         result *= updateData(dict, action, prefix, prefixSize, suffix, suffixSize, postfix, postfixSize);
@@ -78,20 +79,6 @@ int loadDict(char *filename, Dict *dict, int showDebug) {
             printCollectedData(dict, action);
         }
     }
-
-//    printf("%s\n", action);
-//    printf("Pref %d Suf %d Postf %d\n", prefixSize, suffixSize, postfixSize);
-//    for (int i = 0; i < prefixSize; ++i){
-//        printf("%s ", prefix[i]);
-//    } printf("\n");
-//
-//    for (int i = 0; i < suffixSize; ++i){
-//        printf("%s ", suffix[i]);
-//    } printf("\n");
-//
-//    for (int i = 0; i < postfixSize; ++i){
-//        printf("%s ", postfix[i]);
-//    } printf("\n");
 
     fclose(in);
     return result;

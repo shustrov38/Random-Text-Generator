@@ -9,6 +9,6 @@ int main() {
     parse(in, data);
 //    printData(data);
     char *q = "#boy";
-    printf("%s", dictRandGet(data,q,"adj"));
+    printf("%s\n", dictRandGet(data,q,"adj"));
     printf("%s", dictRandGet(data,q,"syn"));
 }

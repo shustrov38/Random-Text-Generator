@@ -1,33 +1,8 @@
 #include "database.h"
 
 
-#define MAX_ARRAY_LENGTH 100
-
-void print_error(errno_t error_num) {
-    const char *error_buf = strerror(error_num);
-    fprintf(stderr, "[Error message] %s\n", error_buf);
-}
-
-TemplateDictionary *createTemplateDictionary() {
-    TemplateDictionary *dict = (TemplateDictionary *) malloc(sizeof(TemplateDictionary));
-    dict->capacity = DICT_INIT_CAPACITY;
-    dict->size = 0;
-    dict->data = (Entry **) malloc(dict->capacity * sizeof(Entry *));
-    if (!dict->data) {
-        print_error(errno);
-        exit(EXIT_FAILURE);
-    }
-    return dict;
-}
-
-inline static int find(TemplateDictionary *dict, char *key, int *index) {
-    for (*index = 0; *index < dict->size; ++(*index)) {
-        if (!strcmp(key, dict->data[*index]->key)) {
-            return 1;
-        }
-    }
-    return 0;
-}
+#define MAX_ARRAY_LENGTH 50
+#define MAX_STRING_LENGTH 50
 
 char *createArray1D(int n) {
     char *t = (char *) malloc(n * sizeof(char));
@@ -42,52 +17,68 @@ char **createArray2D(int n, int m) {
     return t;
 }
 
-void pushTemplateDictionary(TemplateDictionary *dict, char *key, char **prefix, int prefixSize, char **suffix,
-                            int suffixSize, char **postfix, int postfixSize) {
+void copyArray1D(char *dst, char *src, int elementCount) {
+    memcpy(dst, src, elementCount * sizeof(char));
+}
+
+void copyArray2D(char **dst, char **src, int elementCount) {
+    for (int i = 0; i < elementCount; ++i) {
+        copyArray1D(dst[i], src[i], elementCount);
+    }
+}
+
+Entry *createEntry() {
+    Entry *e = (Entry *)malloc(sizeof(Entry));
+    e->key = createArray1D(MAX_STRING_LENGTH);
+    e->prefix = createArray2D(MAX_ARRAY_LENGTH, MAX_STRING_LENGTH);
+    e->prefixSize = 0;
+    e->suffix = createArray2D(MAX_ARRAY_LENGTH, MAX_STRING_LENGTH);
+    e->suffixSize = 0;
+    e->postfix = createArray2D(MAX_ARRAY_LENGTH, MAX_STRING_LENGTH);
+    e->postfixSize = 0;
+    return e;
+}
+
+void copyEntry(Entry *dst, Entry *src) {
+    memcpy(dst, src, sizeof(Entry));
+
+}
+
+TemplateDictionary *createTemplateDictionary() {
+    TemplateDictionary *dict = (TemplateDictionary *) malloc(sizeof(TemplateDictionary));
+    dict->capacity = DICT_INIT_CAPACITY;
+    dict->size = 0;
+    dict->data = (Entry **) malloc(dict->capacity * sizeof(Entry *));
+    return dict;
+}
+
+inline static int find(TemplateDictionary *dict, char *key, int *index) {
+    for (*index = 0; *index < dict->size; ++(*index)) {
+        if (!strcmp(key, dict->data[*index]->key)) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void pushTemplateDictionary(TemplateDictionary *dict, Entry *e) {
     if (dict->size == dict->capacity) {
         dict->capacity *= 2;
         dict->data = (Entry **) realloc(dict->data, dict->capacity * sizeof(Entry *));
-        if (!dict->data) {
-            print_error(errno);
-            exit(EXIT_FAILURE);
-        }
-    }
-    dict->data[dict->size] = (Entry *) malloc(sizeof(Entry));
-
-    dict->data[dict->size]->prefixSize = prefixSize;
-    dict->data[dict->size]->suffixSize = suffixSize;
-    dict->data[dict->size]->postfixSize = postfixSize;
-
-    dict->data[dict->size]->key = createArray1D(MAX_ARRAY_LENGTH);
-    dict->data[dict->size]->prefix = createArray2D(MAX_ARRAY_LENGTH, MAX_ARRAY_LENGTH);
-    dict->data[dict->size]->suffix = createArray2D(MAX_ARRAY_LENGTH, MAX_ARRAY_LENGTH);
-    dict->data[dict->size]->postfix = createArray2D(MAX_ARRAY_LENGTH, MAX_ARRAY_LENGTH);
-
-    memcpy(dict->data[dict->size]->key, key, strlen(key) * sizeof(char *));
-
-    for (int i = 0; i < prefixSize; ++i) {
-        memcpy(dict->data[dict->size]->prefix[i], prefix[i], prefixSize * sizeof(char *));
     }
 
-    for (int i = 0; i < suffixSize; ++i) {
-        memcpy(dict->data[dict->size]->suffix[i], suffix[i], suffixSize * sizeof(char *));
-    }
-
-    for (int i = 0; i < postfixSize; ++i) {
-        memcpy(dict->data[dict->size]->postfix[i], postfix[i], postfixSize * sizeof(char *));
-    }
-
+    dict->data[dict->size] = createEntry();
+    copyEntry(dict->data[dict->size], e);
     dict->size++;
 }
 
-void updateTemplateDictionary(TemplateDictionary *dict, char *key, char **prefix, int prefixSize, char **suffix,
-                              int suffixSize, char **postfix, int postfixSize) {
+void updateTemplateDictionary(TemplateDictionary *dict, Entry *e) {
     int index, contains;
-    contains = find(dict, key, &index);
+    contains = find(dict, e->key, &index);
     if (contains) {
         return;
     }
-    pushTemplateDictionary(dict, key, prefix, prefixSize, suffix, suffixSize, postfix, postfixSize);
+    pushTemplateDictionary(dict, e);
 }
 
 void printTemplateDictionary(TemplateDictionary *dict) {
@@ -100,7 +91,7 @@ void printTemplateDictionary(TemplateDictionary *dict) {
         Entry *e = dict->data[i];
         printf("> [%d] Stored data for key {%s}:\n", i + 1, e->key);
 
-        printf("\tprefix: [");
+        printf("\t<prefix> : [");
         for (int j = 0; j < e->prefixSize; ++j) {
             printf("%s", e->prefix[j]);
             if (j + 1 != e->prefixSize) {
@@ -109,7 +100,7 @@ void printTemplateDictionary(TemplateDictionary *dict) {
         }
         printf("]\n");
 
-        printf("\tsuffix: [");
+        printf("\t<suffix> : [");
         for (int j = 0; j < e->suffixSize; ++j) {
             printf("%s", e->suffix[j]);
             if (j + 1 != e->suffixSize) {
@@ -118,7 +109,7 @@ void printTemplateDictionary(TemplateDictionary *dict) {
         }
         printf("]\n");
 
-        printf("\tpostfix: [");
+        printf("\t<postfix> : [");
         for (int j = 0; j < e->postfixSize; ++j) {
             printf("%s", e->postfix[j]);
             if (j + 1 != e->postfixSize) {
@@ -132,47 +123,36 @@ void printTemplateDictionary(TemplateDictionary *dict) {
 void loadTemplateDictionary(char *filename, TemplateDictionary *dict, int showDebug) {
     FILE *in = fopen(filename, "r");
 
-    char *action = (char *) malloc(MAX_ARRAY_LENGTH * sizeof(char));
-    char *check = (char *) malloc(MAX_ARRAY_LENGTH * sizeof(char));
-
-    int prefixSize, suffixSize, postfixSize;
-    char **prefix = createArray2D(MAX_ARRAY_LENGTH, MAX_ARRAY_LENGTH);
-    char **suffix = createArray2D(MAX_ARRAY_LENGTH, MAX_ARRAY_LENGTH);
-    char **postfix = createArray2D(MAX_ARRAY_LENGTH, MAX_ARRAY_LENGTH);
-
+    char *check = createArray1D(MAX_STRING_LENGTH);
 
     while (!feof(in)) {
-        prefixSize = 0;
-        suffixSize = 0;
-        postfixSize = 0;
-
-        fscanf(in, "%*c%s", action);
+        Entry *e = createEntry();
+        fscanf(in, "%*c%s", e->key);
 
         for (int i = 0; i < 3; ++i) {
             fscanf(in, "%*s");
             while (1) {
-                fgets(check, MAX_ARRAY_LENGTH, in);
+                fgets(check, MAX_STRING_LENGTH, in);
                 size_t length = strlen(check);
                 if (check[length - 1] == '\n') {
                     check[length - 1] = '\0';
                     length--;
                 }
-                if (length == 0) continue;
-
-                if (!strcmp(check, "--")) break;
-
-                if (i == 0) {
-                    strcpy(prefix[prefixSize++], check);
-                } else if (i == 1) {
-                    strcpy(suffix[suffixSize++], check);
-                } else {
-                    strcpy(postfix[postfixSize++], check);
+                if (length) {
+                    if (!strcmp(check, "--")) {
+                        break;
+                    } else if (i == 0) {
+                        copyArray1D(e->prefix[e->prefixSize++], check, length);
+                    } else if (i == 1) {
+                        copyArray1D(e->suffix[e->suffixSize++], check, length);
+                    } else if (i == 2) {
+                        copyArray1D(e->postfix[e->postfixSize++], check, length);
+                    }
                 }
             }
         }
-        fscanf(in, "%*c");
 
-        updateTemplateDictionary(dict, action, prefix, prefixSize, suffix, suffixSize, postfix, postfixSize);
+        updateTemplateDictionary(dict, e);
     }
 
     if (showDebug) {

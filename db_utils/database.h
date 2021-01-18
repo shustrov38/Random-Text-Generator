@@ -5,23 +5,9 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <stdlib.h>
-#include <errno.h>
 #include <string.h>
 
 #define DICT_INIT_CAPACITY 4
-
-/* database template
- #action
- ##prefix
- word (xN раз)
- --
- ##suffix
- word (xN раз)
- --
- ##postfix
- word (xN раз)
- --
- */
 
 typedef struct {
     char *key;
@@ -36,11 +22,23 @@ typedef struct {
 
 TemplateDictionary *createTemplateDictionary();
 
-void updateTemplateDictionary(TemplateDictionary *dict, char *key, char **prefix, int prefixSize, char **suffix,
-                              int suffixSize, char **postfix, int postfixSize);
+void updateTemplateDictionary(TemplateDictionary *dict, Entry *e);
 
 void printTemplateDictionary(TemplateDictionary *dict);
 
 void loadTemplateDictionary(char *filename, TemplateDictionary *dict, int showDebug);
+
+/* database template
+ #action
+ ##prefix
+ word (xN раз)
+ --
+ ##suffix
+ word (xN раз)
+ --
+ ##postfix
+ word (xN раз)
+ --
+ */
 
 #endif //RANDOM_TEXT_GENERATOR_DATABASE_H

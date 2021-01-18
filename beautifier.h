@@ -8,9 +8,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+int Strlen(char s[]);
+
 typedef struct word
 {
-    char *name;
+    char name[50];
     char **synonyms;
     size_t syn_size;
     char **adjectives;
@@ -26,12 +28,12 @@ typedef struct word
 
 typedef struct data
 {
-    WORD *words;
+    WORD **words;
     size_t size;
     size_t capacity;
 }DATA;
 
-DATA create_data();
+DATA *create_data();
 
 void update_data(DATA *data, char *word);
 

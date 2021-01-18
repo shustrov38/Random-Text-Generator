@@ -1,18 +1,10 @@
 //
-// Created by Alex on 17.01.2021.
+// Created by Alex on 17.01.2021
+// Edited by Igor on 18.01.2021
+// Designed by Hideo Kojima on 31.02.2021
 //
 
 #include "beautifier.h"
-
-int Strlen(char s[])
-{
-    int i=0;
-    while(s[i]!=0)
-    {
-        ++i;
-    }
-    return i;
-}
 
 DATA *create_data()
 {
@@ -58,41 +50,29 @@ void update_word_adj(DATA *data, char *adjective)
 void parse(FILE *in, DATA *data)
 {
     char *string = (char*)malloc(50*sizeof(char));
-//    char *string2 = (char*)malloc(50*sizeof(char));
+    int flag = 0;
     while(!feof(in))
     {
         fgets(string, 50, in);
         if(string[0]=='#' && string[1]!='#')
         {
-//        for(int i=1;i<Strlen(string);i++)
-//        {
-//            int j=0;
-//            string2[j]=string[i];
-//            j++;
-//        }
-//        string[Strlen(string)-1]='0';
             update_data(data, string);
+            flag = 0;
         }
-        else if(string[0]=='#' && string[1]=='#' && string[2]=='s')
+        if(string[0]=='#' && string[1]=='#' && string[2]=='s')
         {
-            fgets(string, 50, in);
-            update_word_syn(data, string);
-            while(string[0]!='#')
-            {
-                fgets(string, 100, in);
-                update_word_syn(data, string);
-            }
+            flag = 1;
+            continue;
         }
-        else if(string[0]=='#' && string[1]=='#' && string[2]=='a')
+        if(string[0]=='#' && string[1]=='#' && string[2]=='a')
         {
-            fgets(string, 100, in);
-            update_word_adj(data, string);
-            while(string[0]!='#')
-            {
-                fgets(string, 100, in);
-                update_word_adj(data, string);
-            }
+            flag = 2;
+            continue;
         }
+
+        if (flag == 1) update_word_syn(data, string);
+        if (flag == 2) update_word_adj(data, string);
+
     }
 
 }
@@ -102,19 +82,17 @@ void print_data(DATA *data)
     for(int i=0;i<data->size;i++)
     {
         printf("%s", data->words[i]->name);
-        printf("Synonyms: ");
+        printf("Synonyms: \n");
         for(int j=0;j<data->words[i]->syn_size;j++)
         {
-            printf("%s ", data->words[i]->synonyms[j]);
+            printf("%s", data->words[i]->synonyms[j]);
         }
         printf("\n");
-        printf("Adjectives: ");
+        printf("Adjectives: \n");
         for(int j=0;j<data->words[i]->adj_size;j++)
         {
-            printf("%s ", data->words[i]->adjectives[j]);
+            printf("%s", data->words[i]->adjectives[j]);
         }
         printf("\n");
     }
 };
-
-

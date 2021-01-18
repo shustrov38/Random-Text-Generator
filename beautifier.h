@@ -8,16 +8,13 @@
 #include <string.h>
 #include <stdlib.h>
 
-int Strlen(char s[]);
-
-typedef struct word
-{
+typedef struct word {
     char name[50];
     char **synonyms;
     size_t syn_size;
     char **adjectives;
     size_t adj_size;
-}WORD;
+} WORD;
 
 //шаблон ввода
 //#word
@@ -26,22 +23,15 @@ typedef struct word
 //##adjectives
 //...
 
-typedef struct data
-{
+typedef struct data {
     WORD **words;
     size_t size;
     size_t capacity;
-}DATA;
+} DATA;
 
-DATA *create_data();
-
-void update_data(DATA *data, char *word);
-
-void update_word_syn(DATA *data, char *synonym);
-
-void update_word_adj(DATA *data, char *adjective);
+DATA *createData();
 
 void parse(FILE *in, DATA *data);
 
-void print_data(DATA *data);
+void printData(DATA *data);
 

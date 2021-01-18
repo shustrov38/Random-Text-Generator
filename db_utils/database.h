@@ -36,7 +36,8 @@ typedef struct {
 
 TemplateDictionary *createTemplateDictionary();
 
-void updateTemplateDictionary(TemplateDictionary *dict, Entry *e);
+void updateTemplateDictionary(TemplateDictionary *dict, char *key, char **prefix, int prefixSize, char **suffix,
+                              int suffixSize, char **postfix, int postfixSize);
 
 void printTemplateDictionary(TemplateDictionary *dict);
 

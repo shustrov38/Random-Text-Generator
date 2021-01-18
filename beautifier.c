@@ -84,7 +84,7 @@ void printData(DATA *data) {
 };
 
 char *dictRandGet(DATA *dict, char *key, char *param) {
-    int defIndX = 0;
+    int defIndX = -1;
     for (int i = 0; i < dict->size; i++){
         if (strcmp(key,dict->words[i]->name) == 0){
             defIndX = i;
@@ -98,14 +98,22 @@ char *dictRandGet(DATA *dict, char *key, char *param) {
     srand(stime);
     rand();
     if (strcmp(param,"syn")==0) {
+        if(defIndX==-1 || dict->words[defIndX]->syn_size==0)
+        {
+            return key;
+        }
         int j = rand() % dict->words[defIndX]->syn_size;
-        printf("%s", dict->words[defIndX]->synonyms[j]);
+//        printf("%s", dict->words[defIndX]->synonyms[j]);
         return dict->words[defIndX]->synonyms[j];
     }
     rand();
     if (strcmp(param,"adj")==0) {
+        if(defIndX==-1 || dict->words[defIndX]->adj_size==0)
+        {
+            return NULL;
+        }
         int j = rand() % dict->words[defIndX]->adj_size;
-        printf("%s", dict->words[defIndX]->adjectives[j]);
+//        printf("%s", dict->words[defIndX]->adjectives[j]);
         return dict->words[defIndX]->adjectives[j];
     }
 

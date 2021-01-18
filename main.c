@@ -8,7 +8,7 @@ int main() {
     data = createData();
     parse(in, data);
 //    printData(data);
-    char *q = "#boy\n";
-    dictRandGet(data,q,"adj");
-    dictRandGet(data,q,"syn");
+    char *q = "#boy";
+    printf("%s", dictRandGet(data,q,"adj"));
+    printf("%s", dictRandGet(data,q,"syn"));
 }

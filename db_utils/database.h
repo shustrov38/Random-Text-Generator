@@ -6,8 +6,15 @@
 #include <malloc.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define DICT_INIT_CAPACITY 4
+
+#define SEPARATE_SYMBOL "--"
+
+#define PREFIX 0
+#define SUFFIX 1
+#define POSTFIX 2
 
 typedef struct {
     char *key;
@@ -27,6 +34,8 @@ void updateTemplateDictionary(TemplateDictionary *dict, Entry *e);
 void printTemplateDictionary(TemplateDictionary *dict);
 
 void loadTemplateDictionary(char *filename, TemplateDictionary *dict, int showDebug);
+
+char *getRandomValueFromTemplateDictionary(TemplateDictionary *dict, char *key, int type);
 
 /* database template
  #action

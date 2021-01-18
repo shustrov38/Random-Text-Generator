@@ -28,7 +28,7 @@ void copyArray2D(char **dst, char **src, int elementCount) {
 }
 
 Entry *createEntry() {
-    Entry *e = (Entry *)malloc(sizeof(Entry));
+    Entry *e = (Entry *) malloc(sizeof(Entry));
     e->key = createArray1D(MAX_STRING_LENGTH);
     e->prefix = createArray2D(MAX_ARRAY_LENGTH, MAX_STRING_LENGTH);
     e->prefixSize = 0;
@@ -41,7 +41,6 @@ Entry *createEntry() {
 
 void copyEntry(Entry *dst, Entry *src) {
     memcpy(dst, src, sizeof(Entry));
-
 }
 
 TemplateDictionary *createTemplateDictionary() {
@@ -139,7 +138,7 @@ void loadTemplateDictionary(char *filename, TemplateDictionary *dict, int showDe
                     length--;
                 }
                 if (length) {
-                    if (!strcmp(check, "--")) {
+                    if (!strcmp(check, SEPARATE_SYMBOL)) {
                         break;
                     } else if (i == 0) {
                         copyArray1D(e->prefix[e->prefixSize++], check, length);
@@ -160,4 +159,26 @@ void loadTemplateDictionary(char *filename, TemplateDictionary *dict, int showDe
     }
 
     fclose(in);
+}
+
+char *getRandomValueFromTemplateDictionary(TemplateDictionary *dict, char *key, int type) {
+    int index, contains, i;
+    contains = find(dict, key, &index);
+    if (!contains) {
+        return NULL;
+    }
+
+    if (type == PREFIX) {
+        i = rand() % dict->data[index]->prefixSize;
+        return dict->data[index]->prefix[i];
+    } else if (type == SUFFIX) {
+        i = rand() % dict->data[index]->suffixSize;
+        return dict->data[index]->suffix[i];
+    } else if (type == POSTFIX) {
+        i = rand() % dict->data[index]->postfixSize;
+        return dict->data[index]->postfix[i];
+    } else {
+        fprintf(stderr, "Bad type format in {getRandomValueFromTemplateDictionary}\n");
+        exit(EXIT_FAILURE);
+    }
 }

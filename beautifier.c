@@ -82,3 +82,31 @@ void printData(DATA *data) {
         printf("\n");
     }
 };
+
+char *dictRandGet(DATA *dict, char *key, char *param) {
+    int defIndX = 0;
+    for (int i = 0; i < dict->size; i++){
+        if (strcmp(key,dict->words[i]->name) == 0){
+            defIndX = i;
+            break;
+        }
+    }
+    int stime;
+    long ltime;
+    ltime = time (NULL);
+    stime = (int) ltime/2;
+    srand(stime);
+    rand();
+    if (strcmp(param,"syn")==0) {
+        int j = rand() % dict->words[defIndX]->syn_size;
+        printf("%s", dict->words[defIndX]->synonyms[j]);
+        return dict->words[defIndX]->synonyms[j];
+    }
+    rand();
+    if (strcmp(param,"adj")==0) {
+        int j = rand() % dict->words[defIndX]->adj_size;
+        printf("%s", dict->words[defIndX]->adjectives[j]);
+        return dict->words[defIndX]->adjectives[j];
+    }
+
+};

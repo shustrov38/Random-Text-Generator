@@ -7,6 +7,7 @@
 #include <malloc.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 typedef struct word {
     char name[50];
@@ -35,3 +36,4 @@ void parse(FILE *in, DATA *data);
 
 void printData(DATA *data);
 
+char *dictRandGet(DATA *dict, char *key, char *param);

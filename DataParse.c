@@ -8,57 +8,108 @@ char **createArray2D() {
     return t;
 }
 
-raceInfo *createStructArray() {
-    raceInfo *t = (raceInfo *) malloc(sizeof(raceInfo) * MAX_ARR_LEN);
-    return t;
-}
 
-void initStruct(raceInfo *RACE){
+void initStruct1(raceInfo *RACE){
     for (int i = 0; i < MAX_STR_LEN; ++i) {
-        RACE[i].action = (char *) malloc(sizeof(char) * MAX_STR_LEN);
-        RACE[i].name = (char *) malloc(sizeof(char) * MAX_STR_LEN);
-        RACE[i].notice = createArray2D();
+        RACE[i].action;
+        RACE[i].name;
+        RACE[i].notice;
         RACE[i].lap = 0;
         RACE[i].noteSize = 0;
     }
 }
 
-void InfoParse(char *filename){
+
+int noticeIndex(char s[MAX_STR_LEN]){
+    int i = 0, count = 0;
+    while (count != 3) {
+        while((s[i] == '\t' || s[i] == ' ') && s[i] != '\n'){
+            ++i;
+        }
+        while(s[i] != ' ' && s[i] != '\t' && s[i] != '\n'){
+            ++i;
+        }
+        count++;
+    }
+    if(s[i] == '\n'){
+        return -1;
+    } else {
+        while(s[i] == '\t' || s[i] == ' '){
+            ++i;
+        }
+        return i;
+    }
+
+}
+
+//int tabCount(char s[MAX_STR_LEN]) {
+//    int i = 0, count = 0;
+//    while (s[i] != '\n') {
+//        while (s[i] == '\t' && s[i] != '\n') {
+//            ++i;
+//        }
+//        while (s[i] != '\t' && s[i] != '\n') {
+//            ++i;
+//        }
+//        count++;
+//    }
+//    return count;
+//}
+
+
+raceInfo *InfoParse(char *filename) {
     FILE *in = fopen(filename, "r");
 
-    raceInfo *RACE = createStructArray();
-    int SIZE = 0;
-    initStruct(RACE);
+    raceInfo *parseRace = (raceInfo *) malloc(sizeof(raceInfo) * MAX_ARR_LEN);
 
-    while (!feof(in)){
+    int size = 0;
+    initStruct1(parseRace);
+
+    while (!feof(in)) {
         char curString[MAX_STR_LEN];
-        int curLap; char curName[MAX_STR_LEN], curAct[MAX_STR_LEN];
+        int curLap;
+        char curName[MAX_STR_LEN], curAct[MAX_STR_LEN], curNotice[MAX_STR_LEN];
         fgets(curString, MAX_STR_LEN, in);
-        sscanf(curString, "%d %s %s", &curLap, curName, curAct);
-        //тут надо все action про»фать
-        //пока есть только дл€ start
-        if (strcmp(curAct, "старт") == 0) {
-            char pos[MAX_STR_LEN];
-            sscanf(curString, "%s", pos);
-            //printf("%s\n", pos);
-            RACE[SIZE].lap = curLap;
-            strcpy(RACE[SIZE].name, curName);
-            strcpy(RACE[SIZE].action, curAct);
-            strcpy(RACE[SIZE].notice[0], pos);
-            RACE[SIZE].noteSize++;
 
-        }
-        SIZE++;
-    }
+        //1st variant of Parser
+        int indexNotice = noticeIndex(curString) - 1;
 
-    for (int i = 0; i < SIZE; ++i){
-        printf("%d  %s  %s  ", RACE[i].lap, RACE[i].name, RACE[i].action);
-        if (RACE[i].noteSize > 0){
-            for (int j = 0; j < RACE[i].noteSize; ++j){
-                printf("%s  ", RACE[i].notice[j]);
+        sscanf(curString, "%d%s%s", &curLap, curName, curAct);
+
+        parseRace[size].lap = curLap;
+        strcpy(parseRace[size].name, curName);
+        strcpy(parseRace[size].action, curAct);
+
+
+        int i = 0;
+        while (indexNotice != strlen(curString)+1) {
+            if ((curString[indexNotice] == '\t' || curString[indexNotice] == '\n') && i != 0) {
+                strcpy(parseRace[size].notice[parseRace[size].noteSize], curNotice);
+                parseRace[size].noteSize++;
+                i = 0;
+                memset(curNotice, 0, sizeof(curNotice));
+            } else {
+                if (i == 0) {
+                    indexNotice++;
+                }
+                curNotice[i] = curString[indexNotice];
+                ++i;
+                ++indexNotice;
             }
-        } printf("\n");
+        }
+
+        size++;
     }
 
+    size--;
 
+    for (int i = 0; i < size; ++i) {
+        printf("%d  %s  %s  ", parseRace[i].lap, parseRace[i].name, parseRace[i].action);
+        for (int j = 0; j < parseRace[i].noteSize; ++j) {
+            printf("%s  ", parseRace[i].notice[j]);
+        }
+        printf("\n");
+    }
+
+    //return parseRace;
 }

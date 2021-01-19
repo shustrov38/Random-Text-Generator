@@ -1,5 +1,7 @@
 #include "DataParse.h"
 
+int size = 0;
+
 char **createArray2D() {
     char **t = (char **) malloc(sizeof(char *) * MAX_ARR_LEN);
     for (int i = 0; i < MAX_ARR_LEN; ++i) {
@@ -42,27 +44,11 @@ int noticeIndex(char s[MAX_STR_LEN]){
 
 }
 
-//int tabCount(char s[MAX_STR_LEN]) {
-//    int i = 0, count = 0;
-//    while (s[i] != '\n') {
-//        while (s[i] == '\t' && s[i] != '\n') {
-//            ++i;
-//        }
-//        while (s[i] != '\t' && s[i] != '\n') {
-//            ++i;
-//        }
-//        count++;
-//    }
-//    return count;
-//}
-
-
 raceInfo *InfoParse(char *filename) {
     FILE *in = fopen(filename, "r");
 
     raceInfo *parseRace = (raceInfo *) malloc(sizeof(raceInfo) * MAX_ARR_LEN);
 
-    int size = 0;
     initStruct1(parseRace);
 
     while (!feof(in)) {
@@ -103,13 +89,17 @@ raceInfo *InfoParse(char *filename) {
 
     size--;
 
-    for (int i = 0; i < size; ++i) {
-        printf("%d  %s  %s  ", parseRace[i].lap, parseRace[i].name, parseRace[i].action);
-        for (int j = 0; j < parseRace[i].noteSize; ++j) {
-            printf("%s  ", parseRace[i].notice[j]);
-        }
-        printf("\n");
-    }
+//    for (int i = 0; i < size; ++i) {
+//        printf("%d  %s  %s  ", parseRace[i].lap, parseRace[i].name, parseRace[i].action);
+//        for (int j = 0; j < parseRace[i].noteSize; ++j) {
+//            printf("%s  ", parseRace[i].notice[j]);
+//        }
+//        printf("\n");
+//    }
 
-    //return parseRace;
+    return parseRace;
+}
+
+int returnSize(){
+    return size;
 }

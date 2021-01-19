@@ -29,4 +29,6 @@ raceInfo *InfoParse(char *filename);
 
 int tabCount(char s[MAX_STR_LEN]);
 
+int returnSize();
+
 #endif //RANDOM_TEXT_GENERATOR_DATAPARSE_H

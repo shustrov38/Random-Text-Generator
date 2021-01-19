@@ -49,6 +49,11 @@ void parse(FILE *in, DATA *data) {
         fgets(string, 50, in);
         string[strlen(string)-1]='\0';
         if (string[0] == '#' && string[1] != '#') {
+            for(int i=1;i<strlen(string);i++)
+            {
+                string[i-1]=string[i];
+            }
+            string[strlen(string)-1]='\0';
             updateData(data, string);
             flag = 0;
         }

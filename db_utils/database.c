@@ -2,7 +2,7 @@
 
 
 #define MAX_ARRAY_LENGTH 50
-#define MAX_STRING_LENGTH 50
+#define MAX_STRING_LENGTH 100
 
 char *createArray1D(int n) {
     char *t = (char *) malloc(n * sizeof(char));

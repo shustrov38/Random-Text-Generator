@@ -9,11 +9,11 @@
 
 #define DICT_INIT_CAPACITY 4
 
-#define SEPARATE_SYMBOL "--"
+#define TD_SEPARATE_SYMBOL "--"
 
-#define PREFIX 0
-#define SUFFIX 1
-#define POSTFIX 2
+#define TD_PREFIX 0
+#define TD_SUFFIX 1
+#define TD_POSTFIX 2
 
 typedef struct {
     char *key;
@@ -27,6 +27,8 @@ typedef struct {
 } TemplateDictionary;
 
 TemplateDictionary *tdCreateNew();
+
+void tdDestroy(TemplateDictionary *dict);
 
 void tdPrintData(TemplateDictionary *dict);
 

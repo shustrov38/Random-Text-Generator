@@ -1,46 +1,76 @@
 #include "TemplateDictionary.h"
 
-
 #define MAX_ARRAY_LENGTH 50
 #define MAX_STRING_LENGTH 100
 
-char *createArray1D(int n) {
+char *createArray1D() {
+    int n = MAX_STRING_LENGTH;
     char *t = (char *) malloc(n * sizeof(char));
+    memset(t, 0, MAX_STRING_LENGTH);
     return t;
 }
 
-char **createArray2D(int n, int m) {
+char **createArray2D() {
+    int n = MAX_ARRAY_LENGTH;
     char **t = (char **) malloc(n * sizeof(char *));
     for (int i = 0; i < n; ++i) {
-        t[i] = createArray1D(m);
+        t[i] = createArray1D();
     }
     return t;
 }
 
-void copyArray1D(char *dst, char *src, int elementCount) {
+void copyArray1D(char *dst, char *src) {
+    int elementCount = MAX_STRING_LENGTH;
     memcpy(dst, src, elementCount * sizeof(char));
 }
 
-void copyArray2D(char **dst, char **src, int elementCount) {
+void copyArray2D(char **dst, char **src) {
+    int elementCount = MAX_ARRAY_LENGTH;
     for (int i = 0; i < elementCount; ++i) {
-        copyArray1D(dst[i], src[i], elementCount);
+        copyArray1D(dst[i], src[i]);
     }
+}
+
+void freeArray1D(char *t) {
+    free(t);
+}
+
+void freeArray2D(char **t) {
+    size_t size = MAX_ARRAY_LENGTH;
+    for (int i = 0; i < size; ++i) {
+        freeArray1D(t[i]);
+    }
+    free(t);
 }
 
 Entry *createEntry() {
     Entry *e = (Entry *) malloc(sizeof(Entry));
-    e->key = createArray1D(MAX_STRING_LENGTH);
-    e->prefix = createArray2D(MAX_ARRAY_LENGTH, MAX_STRING_LENGTH);
+    e->key = createArray1D();
+    e->prefix = createArray2D();
     e->prefixSize = 0;
-    e->suffix = createArray2D(MAX_ARRAY_LENGTH, MAX_STRING_LENGTH);
+    e->suffix = createArray2D();
     e->suffixSize = 0;
-    e->postfix = createArray2D(MAX_ARRAY_LENGTH, MAX_STRING_LENGTH);
+    e->postfix = createArray2D();
     e->postfixSize = 0;
     return e;
 }
 
 void copyEntry(Entry *dst, Entry *src) {
-    memcpy(dst, src, sizeof(Entry));
+    copyArray1D(dst->key, src->key);
+    copyArray2D(dst->prefix, src->prefix);
+    dst->prefixSize = src->prefixSize;
+    copyArray2D(dst->suffix, src->suffix);
+    dst->suffixSize = src->suffixSize;
+    copyArray2D(dst->postfix, src->postfix);
+    dst->postfixSize = src->postfixSize;
+}
+
+void freeEntry(Entry *e) {
+    freeArray1D(e->key);
+    freeArray2D(e->prefix);
+    freeArray2D(e->suffix);
+    freeArray2D(e->postfix);
+    free(e);
 }
 
 TemplateDictionary *tdCreateNew() {
@@ -49,6 +79,13 @@ TemplateDictionary *tdCreateNew() {
     dict->size = 0;
     dict->data = (Entry **) malloc(dict->capacity * sizeof(Entry *));
     return dict;
+}
+
+void tdDestroy(TemplateDictionary *dict) {
+    for (int i = 0; i < dict->size; ++i) {
+        freeEntry(dict->data[i]);
+    }
+    free(dict);
 }
 
 inline static int find(TemplateDictionary *dict, char *key, int *index) {
@@ -87,7 +124,9 @@ void tdPrintData(TemplateDictionary *dict) {
         return;
     }
     for (int i = 0; i < dict->size; ++i) {
-        Entry *e = dict->data[i];
+        Entry *e = createEntry();
+        copyEntry(e, dict->data[i]);
+
         printf("> [%d] Stored data for key {%s}:\n", i + 1, e->key);
 
         printf("\t<prefix> : [");
@@ -116,13 +155,15 @@ void tdPrintData(TemplateDictionary *dict) {
             }
         }
         printf("]\n");
+
+        freeEntry(e);
     }
 }
 
 void tdLoadData(char *filename, TemplateDictionary *dict, int showDebug) {
     FILE *in = fopen(filename, "r");
 
-    char *check = createArray1D(MAX_STRING_LENGTH);
+    char *check = createArray1D();
 
     while (!feof(in)) {
         Entry *e = createEntry();
@@ -138,20 +179,21 @@ void tdLoadData(char *filename, TemplateDictionary *dict, int showDebug) {
                     length--;
                 }
                 if (length) {
-                    if (!strcmp(check, SEPARATE_SYMBOL)) {
+                    if (!strcmp(check, TD_SEPARATE_SYMBOL)) {
                         break;
                     } else if (i == 0) {
-                        copyArray1D(e->prefix[e->prefixSize++], check, length);
+                        copyArray1D(e->prefix[e->prefixSize++], check);
                     } else if (i == 1) {
-                        copyArray1D(e->suffix[e->suffixSize++], check, length);
+                        copyArray1D(e->suffix[e->suffixSize++], check);
                     } else if (i == 2) {
-                        copyArray1D(e->postfix[e->postfixSize++], check, length);
+                        copyArray1D(e->postfix[e->postfixSize++], check);
                     }
                 }
             }
         }
 
         tdUpdate(dict, e);
+        freeEntry(e);
     }
 
     if (showDebug) {
@@ -168,13 +210,13 @@ char *tdGetRandomTemplate(TemplateDictionary *dict, char *key, int type) {
         return NULL;
     }
 
-    if (type == PREFIX) {
+    if (type == TD_PREFIX) {
         i = rand() % dict->data[index]->prefixSize;
         return dict->data[index]->prefix[i];
-    } else if (type == SUFFIX) {
+    } else if (type == TD_SUFFIX) {
         i = rand() % dict->data[index]->suffixSize;
         return dict->data[index]->suffix[i];
-    } else if (type == POSTFIX) {
+    } else if (type == TD_POSTFIX) {
         i = rand() % dict->data[index]->postfixSize;
         return dict->data[index]->postfix[i];
     } else {

@@ -9,6 +9,9 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define ADJECTIVE 0
+#define SYNONYM 1
+
 typedef struct word {
     char name[50];
     char **synonyms;
@@ -30,10 +33,10 @@ typedef struct data {
     size_t capacity;
 } DATA;
 
-DATA *createData();
+DATA *createBtfDict();
 
-void parse(FILE *in, DATA *data);
+void parseBtfDict(FILE *in, DATA *data);
 
-void printData(DATA *data);
+void printBtfDict(DATA *data);
 
-char *dictRandGet(DATA *dict, char *key, char *param);
+char *getRandBtfDictValue(DATA *dict, char *key, int type);

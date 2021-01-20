@@ -1,14 +1,16 @@
 #include <stdio.h>
 #include "beautifier.h"
-#include <locale.h>
+#include "locale.h"
 int main() {
+    srand(time(0));
+    setlocale(LC_ALL,"Rus");
 
     FILE *in = fopen("../input.txt", "r");
     DATA *data;
-    data = createData();
-    parse(in, data);
-//    printData(data);
-    char *q = "#boy\n";
-    dictRandGet(data,q,"adj");
-    dictRandGet(data,q,"syn");
+    data = createBtfDict();
+    parseBtfDict(in, data);
+//    printBtfDict(data);
+    char *q = "#boy";
+    getRandBtfDictValue(data,q,SYNONYM);
+    getRandBtfDictValue(data,q,ADJECTIVE);
 }

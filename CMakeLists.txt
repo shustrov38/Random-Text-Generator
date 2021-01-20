@@ -3,4 +3,4 @@ project(Random_Text_Generator C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(Random_Text_Generator main.c tdUtils/TemplateDictionary.h tdUtils/TemplateDictionary.c Race_Parse/DataParse.c Race_Parse/DataParse.h)
+add_executable(Random_Text_Generator main.c tdUtils/TemplateDictionary.h tdUtils/TemplateDictionary.c parserUtils/DataParse.c parserUtils/DataParse.h utilities.h)

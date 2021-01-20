@@ -6,6 +6,9 @@
 #include <malloc.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef RANDOM_TEXT_GENERATOR_UTILITIES_H
+#include "../utilities.h"
+#endif
 
 #define DICT_INIT_CAPACITY 4
 

@@ -1,48 +1,5 @@
 #include "TemplateDictionary.h"
 
-#define MAX_ARRAY_LENGTH 50
-#define MAX_STRING_LENGTH 100
-
-char *createArray1D() {
-    int n = MAX_STRING_LENGTH;
-    char *t = (char *) malloc(n * sizeof(char));
-    memset(t, 0, MAX_STRING_LENGTH);
-    return t;
-}
-
-char **createArray2D() {
-    int n = MAX_ARRAY_LENGTH;
-    char **t = (char **) malloc(n * sizeof(char *));
-    for (int i = 0; i < n; ++i) {
-        t[i] = createArray1D();
-    }
-    return t;
-}
-
-void copyArray1D(char *dst, char *src) {
-    int elementCount = MAX_STRING_LENGTH;
-    memcpy(dst, src, elementCount * sizeof(char));
-}
-
-void copyArray2D(char **dst, char **src) {
-    int elementCount = MAX_ARRAY_LENGTH;
-    for (int i = 0; i < elementCount; ++i) {
-        copyArray1D(dst[i], src[i]);
-    }
-}
-
-void freeArray1D(char *t) {
-    free(t);
-}
-
-void freeArray2D(char **t) {
-    size_t size = MAX_ARRAY_LENGTH;
-    for (int i = 0; i < size; ++i) {
-        freeArray1D(t[i]);
-    }
-    free(t);
-}
-
 Entry *createEntry() {
     Entry *e = (Entry *) malloc(sizeof(Entry));
     e->key = createArray1D();

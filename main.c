@@ -4,7 +4,9 @@
 #include <malloc.h>
 #include <string.h>
 #include <time.h>
-#include "Race_Parse/DataParse.h"
+
+#include "utilities.h"
+#include "parserUtils/DataParse.h"
 #include "tdUtils/TemplateDictionary.h"
 
 #define SENTENCE_LENGTH 200
@@ -60,15 +62,14 @@ int main() {
 
     setlocale(LC_ALL, "Russian");
 
+    /* Template Dictionary initialization */
     TemplateDictionary *dict = tdCreateNew();
     tdLoadData("../tdUtils/templates.txt", dict, 0);
 
-    char *action = "старт", *sentence;
-    for (int i = 0; i < 10; ++i) {
-        sentence = getSentence(dict, action);
-        printf("%s\n", insertDataIntoSentence(sentence, "Валера", "12"));
-    }
-    printf("\n");
+
+    RaceInfo *raceInfo = parserCreate();
+    raceInfo = parserLoadData("../RaceInfo.txt");
+
 
     tdDestroy(dict);
 

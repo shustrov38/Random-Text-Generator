@@ -1,11 +1,8 @@
 #include <stdio.h>
 #include <locale.h>
-#include "DataParse.h"
+#include "Race_Parse/DataParse.h"
 
 
 int main() {
-    setlocale(LC_ALL, "Rus");
-    InfoParse("../RaceInfo.txt");
-    returnSize();
-    return 0;
+
 }

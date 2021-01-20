@@ -1,6 +1,5 @@
 #include "DataParse.h"
 
-
 int size = 0;
 
 char **createArray2D() {
@@ -87,8 +86,13 @@ raceInfo *InfoParse(char *filename) {
     }
 
     size--;
-
-    return parseRace;
+    for (int i = 0; i < size; ++i){
+        printf("%d %s %s", parseRace[i].lap, parseRace[i].name, parseRace[i].action);
+        for (int j = 0; j < parseRace[i].noteSize; ++j){
+            printf("%s ", parseRace[i].notice[j]);
+        }
+    }
+    //return parseRace;
 }
 
 int returnSize(){

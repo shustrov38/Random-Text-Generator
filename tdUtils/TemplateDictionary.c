@@ -1,4 +1,4 @@
-#include "database.h"
+#include "TemplateDictionary.h"
 
 
 #define MAX_ARRAY_LENGTH 50
@@ -43,7 +43,7 @@ void copyEntry(Entry *dst, Entry *src) {
     memcpy(dst, src, sizeof(Entry));
 }
 
-TemplateDictionary *createTemplateDictionary() {
+TemplateDictionary *tdCreateNew() {
     TemplateDictionary *dict = (TemplateDictionary *) malloc(sizeof(TemplateDictionary));
     dict->capacity = DICT_INIT_CAPACITY;
     dict->size = 0;
@@ -71,7 +71,7 @@ void pushTemplateDictionary(TemplateDictionary *dict, Entry *e) {
     dict->size++;
 }
 
-void updateTemplateDictionary(TemplateDictionary *dict, Entry *e) {
+void tdUpdate(TemplateDictionary *dict, Entry *e) {
     int index, contains;
     contains = find(dict, e->key, &index);
     if (contains) {
@@ -80,7 +80,7 @@ void updateTemplateDictionary(TemplateDictionary *dict, Entry *e) {
     pushTemplateDictionary(dict, e);
 }
 
-void printTemplateDictionary(TemplateDictionary *dict) {
+void tdPrintData(TemplateDictionary *dict) {
     printf("[DEBUG DB]\n");
     if (dict->size == 0) {
         printf("> TemplateDatabase is empty.\n");
@@ -119,7 +119,7 @@ void printTemplateDictionary(TemplateDictionary *dict) {
     }
 }
 
-void loadTemplateDictionary(char *filename, TemplateDictionary *dict, int showDebug) {
+void tdLoadData(char *filename, TemplateDictionary *dict, int showDebug) {
     FILE *in = fopen(filename, "r");
 
     char *check = createArray1D(MAX_STRING_LENGTH);
@@ -151,17 +151,17 @@ void loadTemplateDictionary(char *filename, TemplateDictionary *dict, int showDe
             }
         }
 
-        updateTemplateDictionary(dict, e);
+        tdUpdate(dict, e);
     }
 
     if (showDebug) {
-        printTemplateDictionary(dict);
+        tdPrintData(dict);
     }
 
     fclose(in);
 }
 
-char *getRandomValueFromTemplateDictionary(TemplateDictionary *dict, char *key, int type) {
+char *tdGetRandomTemplate(TemplateDictionary *dict, char *key, int type) {
     int index, contains, i;
     contains = find(dict, key, &index);
     if (!contains) {
@@ -178,7 +178,7 @@ char *getRandomValueFromTemplateDictionary(TemplateDictionary *dict, char *key, 
         i = rand() % dict->data[index]->postfixSize;
         return dict->data[index]->postfix[i];
     } else {
-        fprintf(stderr, "Bad type format in {getRandomValueFromTemplateDictionary}\n");
+        fprintf(stderr, "Bad type format in {tdGetRandomTemplate}\n");
         exit(EXIT_FAILURE);
     }
 }

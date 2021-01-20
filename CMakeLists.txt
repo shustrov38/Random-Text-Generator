@@ -3,4 +3,4 @@ project(Random_Text_Generator C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(Random_Text_Generator main.c db_utils/database.h db_utils/database.c db_utils/cvector.c db_utils/cvector.h)
+add_executable(Random_Text_Generator main.c tdUtils/TemplateDictionary.h tdUtils/TemplateDictionary.c)

@@ -4,6 +4,7 @@
 #include <malloc.h>
 #include <string.h>
 #include <time.h>
+#include "Race_Parse/DataParse.h"
 #include "tdUtils/TemplateDictionary.h"
 
 #define SENTENCE_LENGTH 200

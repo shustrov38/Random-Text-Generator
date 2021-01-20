@@ -2,11 +2,6 @@
 
 int size = 0;
 
-RaceInfo *parserCreate() {
-    RaceInfo *t = (RaceInfo *) malloc(sizeof(RaceInfo));
-    return t;
-}
-
 void initStruct(RaceInfo *info) {
     for (int i = 0; i < MAX_ARRAY_LENGTH; ++i) {
         info[i].action;
@@ -15,6 +10,12 @@ void initStruct(RaceInfo *info) {
         info[i].lap = 0;
         info[i].noteSize = 0;
     }
+}
+
+RaceInfo *parserCreate() {
+    RaceInfo *t = (RaceInfo *) malloc(MAX_ARRAY_LENGTH * sizeof(RaceInfo));
+    initStruct(t);
+    return t;
 }
 
 int noticeIndex(char s[MAX_STRING_LENGTH]) {
@@ -39,12 +40,8 @@ int noticeIndex(char s[MAX_STRING_LENGTH]) {
 
 }
 
-RaceInfo *parserLoadData(char *filename) {
+void parserLoadData(char *filename, RaceInfo *parseRace) {
     FILE *in = fopen(filename, "r");
-
-    RaceInfo *parseRace = (RaceInfo *) malloc(sizeof(RaceInfo) * MAX_ARRAY_LENGTH);
-
-    initStruct(parseRace);
 
     while (!feof(in)) {
         char curString[MAX_STRING_LENGTH];
@@ -83,8 +80,6 @@ RaceInfo *parserLoadData(char *filename) {
     }
 
     size--;
-
-    return parseRace;
 }
 
 int parserGetSize() {

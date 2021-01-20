@@ -66,10 +66,14 @@ int main() {
     TemplateDictionary *dict = tdCreateNew();
     tdLoadData("../tdUtils/templates.txt", dict, 0);
 
-
+    /* Input Data Parser initialization */
     RaceInfo *raceInfo = parserCreate();
-    raceInfo = parserLoadData("../RaceInfo.txt");
+    parserLoadData("../RaceInfo.txt", raceInfo);
 
+    for (int i = 0; i < 7; ++i) {
+        char *sentence = getSentence(dict, raceInfo[i].action);
+        printf("%s", insertDataIntoSentence(sentence, raceInfo[i].name, raceInfo[i].notice[0]));
+    }
 
     tdDestroy(dict);
 

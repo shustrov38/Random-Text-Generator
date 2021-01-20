@@ -19,7 +19,7 @@ typedef struct raceInfo {
 
 RaceInfo *parserCreate();
 
-RaceInfo *parserLoadData(char *filename);
+void parserLoadData(char *filename, RaceInfo *parseRace);
 
 int parserGetSize();
 

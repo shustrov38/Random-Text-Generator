@@ -48,8 +48,14 @@ void parseBtfDict(FILE *in, DATA *data) {
     int flag = 0;
     while (!feof(in)) {
         fgets(string, 50, in);
+        string[strlen(string)-1]='\0';
         if (string[0] == '#' && string[1] != '#') {
             memUpdateBtfDict(data, string);
+            for(int i=1;i<strlen(string);i++)
+            {
+                string[i-1]=string[i];
+            }
+            string[strlen(string)-1]='\0';
             flag = 0;
         }
         if (string[0] == '#' && string[1] == '#' && string[2] == 's') {
@@ -93,11 +99,19 @@ char *getRandBtfDictValue(DATA *dict, char *key, int type) {
         }
     }
     if (type == SYNONYM) {
+        if(defIndX==-1 || dict->words[defIndX]->syn_size==0)
+        {
+            return key;
+        }
         int j = rand() % dict->words[defIndX]->syn_size;
         printf("%s", dict->words[defIndX]->synonyms[j]);
         return dict->words[defIndX]->synonyms[j];
     }
     if (type == ADJECTIVE) {
+        if(defIndX==-1 || dict->words[defIndX]->adj_size==0)
+        {
+            return NULL;
+        }
         int j = rand() % dict->words[defIndX]->adj_size;
         printf("%s", dict->words[defIndX]->adjectives[j]);
         return dict->words[defIndX]->adjectives[j];

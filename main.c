@@ -10,7 +10,7 @@ int main() {
     data = createBtfDict();
     parseBtfDict(in, data);
 //    printBtfDict(data);
-    char *q = "#boy";
+    char *q = "#wyrd";
     getRandBtfDictValue(data,q,SYNONYM);
     getRandBtfDictValue(data,q,ADJECTIVE);
 }

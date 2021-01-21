@@ -22,7 +22,7 @@ char *getSentence(TemplateDictionary *dict, char *action) {
     strcat(result, ". ");
     if (rand() % 101 <= CHANCE_FOR_PHRASE) {
         strcat(result, tdGetRandomTemplate(dict, action, TD_POSTFIX));
-        strcat(result, ". ");
+        strcat(result, " ");
     }
 
     return result;
@@ -70,12 +70,13 @@ int main() {
     RaceInfo *raceInfo = parserCreate();
     parserLoadData("../RaceInfo.txt", raceInfo);
 
-    for (int i = 0; i < 7; ++i) {
+    for (int i = 0; i < 20; ++i) {
         char *sentence = getSentence(dict, raceInfo[i].action);
         printf("%s", insertDataIntoSentence(sentence, raceInfo[i].name, raceInfo[i].notice[0]));
     }
 
     tdDestroy(dict);
+    system("pause");
 
     return EXIT_SUCCESS;
 }

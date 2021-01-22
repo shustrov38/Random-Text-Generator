@@ -5,9 +5,7 @@
 #include <malloc.h>
 #include <string.h>
 #include <stdlib.h>
-#ifndef RANDOM_TEXT_GENERATOR_UTILITIES_H
 #include "../utilities.h"
-#endif
 
 typedef struct raceInfo {
     int lap;

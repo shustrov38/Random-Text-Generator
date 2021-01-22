@@ -8,6 +8,7 @@
 #include "utilities.h"
 #include "parserUtils/DataParse.h"
 #include "tdUtils/TemplateDictionary.h"
+#include "btfUtils/beautifier.h"
 
 #define SENTENCE_LENGTH 200
 #define CHANCE_FOR_PHRASE 30
@@ -82,7 +83,6 @@ int main() {
     }
 
     tdDestroy(dict);
-    system("pause");
 
     return EXIT_SUCCESS;
 }

@@ -100,9 +100,11 @@ char *beautifySentence(BeautifierData *data, char *sentence) {
                 word[0] += dToLow;
             }
             char *newWord = btfGetRandDictValue(data, word, BTF_SYNONYM);
-//            if (haveUpper) {
-//                newWord[0] += dToUp;
-//            }
+            if (haveUpper) {
+                // TODO:
+                // create function getUpper()
+                newWord[0] += -dToLow;
+            }
 
             size_t newSize = strlen(newWord);
             for (int i = 0; i < newSize; ++i) {
@@ -134,11 +136,11 @@ int main() {
     BeautifierData *btfData = btfCreateDict();
     btfParseDict("../btfUtils/input.txt", btfData);
 
-    for (int i = 0; i < 22; ++i) {
+    for (int i = 0; i < 20; ++i) {
         char *sentence = getSentence(dict, raceInfo[i].action);
         char *newSentence = beautifySentence(btfData, sentence);
         printf("%s", insertDataIntoSentence(newSentence, &raceInfo[i]));
-}
+    }
 
     tdDestroy(dict);
 

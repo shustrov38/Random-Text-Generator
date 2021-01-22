@@ -44,14 +44,13 @@ void btfParseDict(char *filename, BeautifierData *data) {
     int flag = 0;
     while (!feof(in)) {
         fgets(string, 50, in);
-        string[strlen(string)-1]='\0';
+        string[strlen(string) - 1] = '\0';
         if (string[0] == '#' && string[1] != '#') {
             btfMemUpdDict(data, string);
-            for(int i=1;i<strlen(string);i++)
-            {
-                string[i-1]=string[i];
+            for (int i = 1; i < strlen(string); i++) {
+                string[i - 1] = string[i];
             }
-            string[strlen(string)-1]='\0';
+            string[strlen(string) - 1] = '\0';
             flag = 0;
         }
         if (string[0] == '#' && string[1] == '#' && string[2] == 's') {
@@ -66,20 +65,29 @@ void btfParseDict(char *filename, BeautifierData *data) {
         if (flag == 1) btfUpdDictSyn(data, string);
         if (flag == 2) btfUpdateDictAdj(data, string);
     }
+
+    for (int i = 0; i < data->size; ++i) {
+        size_t size = strlen(data->words[i]->name);
+        for (int j = 1; j < size; ++j) {
+            data->words[i]->name[j - 1] = data->words[i]->name[j];
+        }
+        data->words[i]->name[size - 1] = '\0';
+    }
+
     fclose(in);
 }
 
 void btfPrintDict(BeautifierData *data) {
     for (int i = 0; i < data->size; i++) {
-        printf("%s", data->words[i]->name);
+        printf("%s\n", data->words[i]->name);
         printf("Synonyms: \n");
         for (int j = 0; j < data->words[i]->syn_size; j++) {
-            printf("%s", data->words[i]->synonyms[j]);
+            printf("%s ", data->words[i]->synonyms[j]);
         }
         printf("\n");
         printf("Adjectives: \n");
         for (int j = 0; j < data->words[i]->adj_size; j++) {
-            printf("%s", data->words[i]->adjectives[j]);
+            printf("%s ", data->words[i]->adjectives[j]);
         }
         printf("\n");
     }
@@ -87,28 +95,26 @@ void btfPrintDict(BeautifierData *data) {
 
 char *btfGetRandDictValue(BeautifierData *dict, char *key, int type) {
     int defIndX = -1;
-    for (int i = 0; i < dict->size; i++){
-        if (strcmp(key,dict->words[i]->name) == 0){
+    for (int i = 0; i < dict->size; i++) {
+        if (strcmp(key, dict->words[i]->name) == 0) {
             defIndX = i;
             break;
         }
     }
     if (type == BTF_SYNONYM) {
-        if(defIndX==-1 || dict->words[defIndX]->syn_size==0)
-        {
+        if (defIndX == -1 || dict->words[defIndX]->syn_size == 0) {
             return key;
         }
         int j = rand() % dict->words[defIndX]->syn_size;
-        printf("%s", dict->words[defIndX]->synonyms[j]);
+//        printf("%s", dict->words[defIndX]->synonyms[j]);
         return dict->words[defIndX]->synonyms[j];
     }
     if (type == BTF_ADJECTIVE) {
-        if(defIndX==-1 || dict->words[defIndX]->adj_size==0)
-        {
+        if (defIndX == -1 || dict->words[defIndX]->adj_size == 0) {
             return NULL;
         }
         int j = rand() % dict->words[defIndX]->adj_size;
-        printf("%s", dict->words[defIndX]->adjectives[j]);
+//        printf("%s", dict->words[defIndX]->adjectives[j]);
         return dict->words[defIndX]->adjectives[j];
     }
 

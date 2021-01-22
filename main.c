@@ -43,12 +43,12 @@ char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
             if (sentence[i] == 's') {
                 ++i;
                 if (sentence[i] == '1') {
-                    size_t nameSize=  strlen(raceInfo->name);
+                    size_t nameSize = strlen(raceInfo->name);
                     for (int j = 0; j < nameSize; ++j) {
                         result[resultSize++] = raceInfo->name[j];
                     }
                 } else {
-                    size_t nameSize=  strlen(raceInfo->notice[0]);
+                    size_t nameSize = strlen(raceInfo->notice[0]);
                     for (int j = 0; j < nameSize; ++j) {
                         result[resultSize++] = raceInfo->notice[0][j];
                     }
@@ -64,6 +64,51 @@ char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
                     }
                 }
             }
+        }
+    }
+
+    return result;
+}
+
+char *beautifySentence(BeautifierData *data, char *sentence) {
+    size_t resultSize = 0;
+    char *result = (char *) malloc(SENTENCE_LENGTH * sizeof(char));
+    memset(result, 0, SENTENCE_LENGTH);
+
+    const char sep[] = " .,!-";
+
+    size_t size = strlen(sentence);
+    char word[30];
+    for (int l = 0, r = 0; r < size; ++r) {
+        if (strspn(&sentence[r], sep)) {
+            result[resultSize++] = sentence[r];
+        } else {
+            l = r;
+            while (r < size && !strspn(&sentence[r], sep)) r++;
+            memset(&word, 0, 30 * sizeof(char));
+            for (int i = l; i < r; ++i) {
+                word[i - l] = sentence[i];
+            }
+
+            // lower-[-32, -1] upper-[-64, -33] in Win1251
+            char dToLow = -(-33) - 1;
+            char dToUp = (-33) + 1;
+
+            int haveUpper = 0;
+            if (word[0] >= -64 && word[0] <= -33) {
+                haveUpper = 1;
+                word[0] += dToLow;
+            }
+            char *newWord = btfGetRandDictValue(data, word, BTF_SYNONYM);
+//            if (haveUpper) {
+//                newWord[0] += dToUp;
+//            }
+
+            size_t newSize = strlen(newWord);
+            for (int i = 0; i < newSize; ++i) {
+                result[resultSize++] = newWord[i];
+            }
+            r--;
         }
     }
 
@@ -86,13 +131,14 @@ int main() {
     parserLoadData("../RaceInfo.txt", raceInfo);
 
     /* Beautifier Dictionary initialization */
-    BeautifierData *data = btfCreateDict();
-    btfParseDict("../btfUtils/input.txt", data);
+    BeautifierData *btfData = btfCreateDict();
+    btfParseDict("../btfUtils/input.txt", btfData);
 
-    for (int i = 6; i < 12; ++i) {
+    for (int i = 0; i < 22; ++i) {
         char *sentence = getSentence(dict, raceInfo[i].action);
-        printf("%s", insertDataIntoSentence(sentence, &raceInfo[i]));
-    }
+        char *newSentence = beautifySentence(btfData, sentence);
+        printf("%s", insertDataIntoSentence(newSentence, &raceInfo[i]));
+}
 
     tdDestroy(dict);
 

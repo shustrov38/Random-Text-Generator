@@ -70,6 +70,12 @@ int main() {
     RaceInfo *raceInfo = parserCreate();
     parserLoadData("../RaceInfo.txt", raceInfo);
 
+    FILE *in = fopen("../btfUtils/input.txt", "r");
+    BTF_DATA *data;
+    data = btfCreateDict();
+    btfParseDict(in, data);
+    fclose(in);
+
     for (int i = 0; i < 20; ++i) {
         char *sentence = getSentence(dict, raceInfo[i].action);
         printf("%s", insertDataIntoSentence(sentence, raceInfo[i].name, raceInfo[i].notice[0]));

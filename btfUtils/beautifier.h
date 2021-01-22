@@ -18,7 +18,7 @@ typedef struct word {
     size_t syn_size;
     char **adjectives;
     size_t adj_size;
-} BTF_WORD;
+} BtfWord;
 
 //шаблон ввода
 //#word
@@ -28,15 +28,15 @@ typedef struct word {
 //...
 
 typedef struct data {
-    BTF_WORD **words;
+    BtfWord **words;
     size_t size;
     size_t capacity;
-} BTF_DATA;
+} BeautifierData;
 
-BTF_DATA *btfCreateDict();
+BeautifierData *btfCreateDict();
 
-void btfParseDict(FILE *in, BTF_DATA *data);
+void btfParseDict(char *filename, BeautifierData *data);
 
-void btfPrintDict(BTF_DATA *data);
+void btfPrintDict(BeautifierData *data);
 
-char *btfGetRandDictValue(BTF_DATA *dict, char *key, int type);
+char *btfGetRandDictValue(BeautifierData *dict, char *key, int type);

@@ -10,7 +10,7 @@
 #include "tdUtils/TemplateDictionary.h"
 #include "btfUtils/beautifier.h"
 
-#define SENTENCE_LENGTH 200
+#define SENTENCE_LENGTH 300
 #define CHANCE_FOR_PHRASE 30
 
 char *getSentence(TemplateDictionary *dict, char *action) {
@@ -29,25 +29,39 @@ char *getSentence(TemplateDictionary *dict, char *action) {
     return result;
 }
 
-char *insertDataIntoSentence(char *sentence, char *name, char *position) {
-    size_t size = strlen(sentence), nameSize = strlen(name), positionSize = strlen(position);
-
+char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
     size_t resultSize = 0;
     char *result = (char *) malloc(SENTENCE_LENGTH * sizeof(char));
     memset(result, 0, SENTENCE_LENGTH);
 
+    size_t size = strlen(sentence);
     for (int i = 0; i < size; ++i) {
         if (sentence[i] != '\\') {
             result[resultSize++] = sentence[i];
         } else {
             ++i;
             if (sentence[i] == 's') {
-                for (int j = 0; j < nameSize; ++j) {
-                    result[resultSize++] = name[j];
+                ++i;
+                if (sentence[i] == '1') {
+                    size_t nameSize=  strlen(raceInfo->name);
+                    for (int j = 0; j < nameSize; ++j) {
+                        result[resultSize++] = raceInfo->name[j];
+                    }
+                } else {
+                    size_t nameSize=  strlen(raceInfo->notice[0]);
+                    for (int j = 0; j < nameSize; ++j) {
+                        result[resultSize++] = raceInfo->notice[0][j];
+                    }
                 }
-            } else if (sentence[i] == 'p') {
-                for (int j = 0; j < positionSize; ++j) {
-                    result[resultSize++] = position[j];
+            } else if (sentence[i] == 'n') {
+                for (int k = 0; k < raceInfo->noteSize; ++k) {
+                    size_t curNoticeSize = strlen(raceInfo->notice[k]);
+                    for (int j = 0; j < curNoticeSize; ++j) {
+                        result[resultSize++] = raceInfo->notice[k][j];
+                    }
+                    if (raceInfo->noteSize != 1 && k + 1 != raceInfo->noteSize) {
+                        result[resultSize++] = ' ';
+                    }
                 }
             }
         }
@@ -71,15 +85,13 @@ int main() {
     RaceInfo *raceInfo = parserCreate();
     parserLoadData("../RaceInfo.txt", raceInfo);
 
-    FILE *in = fopen("../btfUtils/input.txt", "r");
-    BTF_DATA *data;
-    data = btfCreateDict();
-    btfParseDict(in, data);
-    fclose(in);
+    /* Beautifier Dictionary initialization */
+    BeautifierData *data = btfCreateDict();
+    btfParseDict("../btfUtils/input.txt", data);
 
-    for (int i = 0; i < 20; ++i) {
+    for (int i = 6; i < 12; ++i) {
         char *sentence = getSentence(dict, raceInfo[i].action);
-        printf("%s", insertDataIntoSentence(sentence, raceInfo[i].name, raceInfo[i].notice[0]));
+        printf("%s", insertDataIntoSentence(sentence, &raceInfo[i]));
     }
 
     tdDestroy(dict);

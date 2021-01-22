@@ -1,7 +1,6 @@
 #include "DataParse.h"
-
+//2 ver
 int size = 0;
-
 void initStruct(RaceInfo *info) {
     for (int i = 0; i < MAX_ARRAY_LENGTH; ++i) {
         info[i].action;

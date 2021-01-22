@@ -7,20 +7,20 @@
 #include "beautifier.h"
 
 
-DATA *createBtfDict() {
-    DATA *data = (DATA *) malloc(sizeof(DATA));
-    data->words = (WORD **) malloc(10 * sizeof(WORD *));
+BTF_DATA *btfCreateDict() {
+    BTF_DATA *data = (BTF_DATA *) malloc(sizeof(BTF_DATA));
+    data->words = (BTF_WORD **) malloc(10 * sizeof(BTF_WORD *));
     data->size = 0;
     data->capacity = 1;
     return data;
 }
 
-void memUpdateBtfDict(DATA *data, char *word) {
+void btfMemUpdDict(BTF_DATA *data, char *word) {
     if (data->size == data->capacity) {
         data->capacity *= 2;
-        data->words = (WORD **) realloc(data->words, data->capacity * sizeof(WORD *));
+        data->words = (BTF_WORD **) realloc(data->words, data->capacity * sizeof(BTF_WORD *));
     }
-    data->words[data->size] = (WORD *) malloc(sizeof(WORD));
+    data->words[data->size] = (BTF_WORD *) malloc(sizeof(BTF_WORD));
     strcpy(data->words[data->size]->name, word);
     data->words[data->size]->synonyms = (char **) malloc(100 * sizeof(char *));
     data->words[data->size]->adjectives = (char **) malloc(100 * sizeof(char *));
@@ -33,24 +33,24 @@ void memUpdateBtfDict(DATA *data, char *word) {
     data->size++;
 }
 
-void updateBtfDictSyn(DATA *data, char *synonym) {
+void btfUpdDictSyn(BTF_DATA *data, char *synonym) {
     strcpy(data->words[data->size - 1]->synonyms[data->words[data->size - 1]->syn_size], synonym);
     data->words[data->size - 1]->syn_size++;
 }
 
-void updateBtfDictAdj(DATA *data, char *adjective) {
+void btfUpdateDictAdj(BTF_DATA *data, char *adjective) {
     strcpy(data->words[data->size - 1]->adjectives[data->words[data->size - 1]->adj_size], adjective);
     data->words[data->size - 1]->adj_size++;
 }
 
-void parseBtfDict(FILE *in, DATA *data) {
+void btfParseDict(FILE *in, BTF_DATA *data) {
     char *string = (char *) malloc(50 * sizeof(char));
     int flag = 0;
     while (!feof(in)) {
         fgets(string, 50, in);
         string[strlen(string)-1]='\0';
         if (string[0] == '#' && string[1] != '#') {
-            memUpdateBtfDict(data, string);
+            btfMemUpdDict(data, string);
             for(int i=1;i<strlen(string);i++)
             {
                 string[i-1]=string[i];
@@ -67,14 +67,14 @@ void parseBtfDict(FILE *in, DATA *data) {
             continue;
         }
 
-        if (flag == 1) updateBtfDictSyn(data, string);
-        if (flag == 2) updateBtfDictAdj(data, string);
+        if (flag == 1) btfUpdDictSyn(data, string);
+        if (flag == 2) btfUpdateDictAdj(data, string);
 
     }
 
 }
 
-void printBtfDict(DATA *data) {
+void btfPrintDict(BTF_DATA *data) {
     for (int i = 0; i < data->size; i++) {
         printf("%s", data->words[i]->name);
         printf("Synonyms: \n");
@@ -90,7 +90,7 @@ void printBtfDict(DATA *data) {
     }
 };
 
-char *getRandBtfDictValue(DATA *dict, char *key, int type) {
+char *btfGetRandDictValue(BTF_DATA *dict, char *key, int type) {
     int defIndX = -1;
     for (int i = 0; i < dict->size; i++){
         if (strcmp(key,dict->words[i]->name) == 0){
@@ -98,7 +98,7 @@ char *getRandBtfDictValue(DATA *dict, char *key, int type) {
             break;
         }
     }
-    if (type == SYNONYM) {
+    if (type == BTF_SYNONYM) {
         if(defIndX==-1 || dict->words[defIndX]->syn_size==0)
         {
             return key;
@@ -107,7 +107,7 @@ char *getRandBtfDictValue(DATA *dict, char *key, int type) {
         printf("%s", dict->words[defIndX]->synonyms[j]);
         return dict->words[defIndX]->synonyms[j];
     }
-    if (type == ADJECTIVE) {
+    if (type == BTF_ADJECTIVE) {
         if(defIndX==-1 || dict->words[defIndX]->adj_size==0)
         {
             return NULL;

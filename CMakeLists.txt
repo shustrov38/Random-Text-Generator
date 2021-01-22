@@ -3,4 +3,4 @@ project(Random_Text_Generator C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(Random_Text_Generator main.c beautifier.c beautifier.h)
+add_executable(Random_Text_Generator main.c btfUtils/beautifier.c btfUtils/beautifier.h)

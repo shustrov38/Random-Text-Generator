@@ -6,52 +6,13 @@
 #include <time.h>
 
 #include "utilities.h"
+#include "alphabetUtils/alphabet.h"
 #include "parserUtils/DataParse.h"
 #include "tdUtils/TemplateDictionary.h"
 #include "btfUtils/beautifier.h"
 
 #define SENTENCE_LENGTH 300
 #define CHANCE_FOR_PHRASE 30
-
-char **createAlphabet(char **alphabet) {
-    FILE *letterChangeFile = fopen("../UpperLower.txt", "r");
-    for (int i = 0; i < 29; ++i) {
-        fgets(alphabet[i], 29, letterChangeFile);
-    }
-    return alphabet;
-}
-
-int checkLetter(char word[30], char **alphabet) {
-    int typeOfLetter = -1;
-    for (int i = 0; i < 29; ++i) {
-        if (word[0] == alphabet[i][0]) {
-            typeOfLetter = 0;
-        }
-        if (word[0] == alphabet[i][1]) {
-            typeOfLetter = 1;
-        }
-    }
-
-    return typeOfLetter;
-}
-
-char *getLower(char word[30], char **alphabet) {
-    for (int i = 0; i < 29; ++i) {
-        if (word[0] == alphabet[i][0]) {
-            word[0] = alphabet[i][1];
-        }
-    }
-    return word;
-}
-
-char *getUpper(char word[30], char **alphabet) {
-    for (int i = 0; i < 29; ++i) {
-        if (word[0] == alphabet[i][1]) {
-            word[0] = alphabet[i][0];
-        }
-    }
-    return word;
-}
 
 char *getSentence(TemplateDictionary *dict, char *action) {
     char *result = (char *) malloc(SENTENCE_LENGTH * sizeof(char));
@@ -110,7 +71,7 @@ char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
     return result;
 }
 
-char *beautifySentence(BeautifierData *data, char *sentence, char **alphabet) {
+char *beautifySentence(BeautifierData *data, char *sentence) {
     size_t resultSize = 0;
     char *result = (char *) malloc(SENTENCE_LENGTH * sizeof(char));
     memset(result, 0, SENTENCE_LENGTH);
@@ -118,36 +79,33 @@ char *beautifySentence(BeautifierData *data, char *sentence, char **alphabet) {
     const char sep[] = " .,!-";
 
     size_t size = strlen(sentence);
-    char word[30];
+    char *word = createArray1D();
     for (int l = 0, r = 0; r < size; ++r) {
         if (strspn(&sentence[r], sep)) {
             result[resultSize++] = sentence[r];
         } else {
             l = r;
             while (r < size && !strspn(&sentence[r], sep)) r++;
-            memset(&word, 0, 30 * sizeof(char));
+            memset(word, 0, 30 * sizeof(char));
             for (int i = l; i < r; ++i) {
                 word[i - l] = sentence[i];
             }
 
-
-            int haveUpper = -1;
-            haveUpper = checkLetter(word, alphabet);
-            char *updatedWord = getLower(word, alphabet);
-            char *newWord = btfGetRandDictValue(data, updatedWord, BTF_SYNONYM);
-            if (!haveUpper) {
-                newWord = getUpper(newWord, alphabet);
+            int haveUpper = isUpper(word);
+            setLower(word);
+            char *synonym = btfGetRandDictValue(data, word, BTF_SYNONYM);
+            if (haveUpper) {
+                setUpper(synonym);
             }
 
-
-            size_t newSize = strlen(newWord);
+            size_t newSize = strlen(synonym);
             for (int i = 0; i < newSize; ++i) {
-                result[resultSize++] = newWord[i];
+                result[resultSize++] = synonym[i];
             }
             r--;
         }
     }
-
+    freeArray1D(word);
     return result;
 }
 
@@ -157,8 +115,7 @@ int main() {
     srand(seed);
 
     setlocale(LC_ALL, "Russian");
-
-    char **alphabet = createAlphabet(createArray2D());
+    createAlphabet();
 
     /* Template Dictionary initialization */
     TemplateDictionary *dict = tdCreateNew();
@@ -174,7 +131,7 @@ int main() {
 
     for (int i = 0; i < 20; ++i) {
         char *sentence = getSentence(dict, raceInfo[i].action);
-        char *newSentence = beautifySentence(btfData, sentence, alphabet);
+        char *newSentence = beautifySentence(btfData, sentence);
         printf("%s", insertDataIntoSentence(newSentence, &raceInfo[i]));
     }
 

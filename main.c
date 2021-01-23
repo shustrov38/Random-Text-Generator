@@ -91,12 +91,11 @@ char *beautifySentence(BeautifierData *data, char *sentence) {
                 word[i - l] = sentence[i];
             }
 
-            int haveUpper = isUpper(word);
             setLower(word);
             char *synonym = btfGetRandDictValue(data, word, BTF_SYNONYM);
-            if (haveUpper) {
-                setUpper(synonym);
-            }
+
+            // got 1st word in sentence
+            if (l == 0) setUpper(synonym);
 
             size_t newSize = strlen(synonym);
             for (int i = 0; i < newSize; ++i) {
@@ -126,7 +125,7 @@ void marginedPrint(char *filename, char *sentence, int margin) {
             ++i;
         }
         copyArray1D(words[wordsLength++], word);
-//        printf("%s\n", word);
+        freeArray1D(word);
     }
 
     FILE *out = fopen(filename, "w");
@@ -145,25 +144,31 @@ void marginedPrint(char *filename, char *sentence, int margin) {
         }
         int spaces = margin - length;
         int step = spaces / (cnt - 1);
-//        if (i == wordsLength && step >= 4) {
-//            for (int x = i - cnt; x < i; ++x) {
-//                fprintf(out, "%s ", words[x]);
-//            }
-//            break;
-//        }
+
+        // last stroke
+        if (i == wordsLength && step >= 4) {
+            for (int x = i - cnt; x < i; ++x) {
+                fprintf(out, "%s ", words[x]);
+            }
+            break;
+        }
+
+        spaces -= step * (cnt - 1);
         for (int x = i - cnt; x < i; ++x) {
             fprintf(out, "%s", words[x]);
-            if (spaces - (cnt - 1)) {
-                --spaces;
+            for (int sp = 0; sp < step; ++sp) {
                 fprintf(out, " ");
             }
-            for (int sp = 0; sp < step; ++sp) {
+            if (spaces) {
+                --spaces;
                 fprintf(out, " ");
             }
         }
         fprintf(out, "\n");
     }
     fclose(out);
+
+    freeArray2D(words);
 }
 
 int main() {
@@ -176,7 +181,7 @@ int main() {
 
     /* Template Dictionary initialization */
     TemplateDictionary *dict = tdCreateNew();
-    tdLoadData("../tdUtils/templates.txt", dict, 1);
+    tdLoadData("../tdUtils/templates.txt", dict, 0);
 
     /* Input Data Parser initialization */
     RaceInfo *raceInfo = parserCreate();

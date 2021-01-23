@@ -23,8 +23,12 @@ char *getSentence(TemplateDictionary *dict, char *action) {
     strcat(result, tdGetRandomTemplate(dict, action, TD_SUFFIX));
     strcat(result, ". ");
     if (rand() % 101 <= CHANCE_FOR_PHRASE) {
-        strcat(result, tdGetRandomTemplate(dict, action, TD_POSTFIX));
-        strcat(result, " ");
+        char *t = createArray1D();
+        t = tdGetRandomTemplate(dict, action, TD_POSTFIX);
+        if (t != NULL) {
+            strcat(result, t);
+            strcat(result, " ");
+        }
     }
 
     return result;

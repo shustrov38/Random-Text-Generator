@@ -168,12 +168,15 @@ char *tdGetRandomTemplate(TemplateDictionary *dict, char *key, int type) {
     }
 
     if (type == TD_PREFIX) {
+        if (dict->data[index]->prefixSize == 0) return NULL;
         i = rand() % dict->data[index]->prefixSize;
         return dict->data[index]->prefix[i];
     } else if (type == TD_SUFFIX) {
+        if (dict->data[index]->suffixSize == 0) return NULL;
         i = rand() % dict->data[index]->suffixSize;
         return dict->data[index]->suffix[i];
     } else if (type == TD_POSTFIX) {
+        if (dict->data[index]->postfixSize == 0) return NULL;
         i = rand() % dict->data[index]->postfixSize;
         return dict->data[index]->postfix[i];
     } else {

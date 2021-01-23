@@ -176,7 +176,7 @@ int main() {
 
     /* Template Dictionary initialization */
     TemplateDictionary *dict = tdCreateNew();
-    tdLoadData("../tdUtils/templates.txt", dict, 0);
+    tdLoadData("../tdUtils/templates.txt", dict, 1);
 
     /* Input Data Parser initialization */
     RaceInfo *raceInfo = parserCreate();

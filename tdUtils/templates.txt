@@ -90,6 +90,7 @@ EXC_BAD
 ##prefix
 PRT \s1
 \s1
+--
 ##suffix
 заходит на пит-стоп.
 принимает решение зайти на пит-стоп. \n
@@ -157,4 +158,48 @@ EXC_GOOD ADJ_GOOD_mg PRT \s1
 --
 ##postfix
 EXC_GOOD
+--
+#столкнов
+##prefix
+PRT \s1
+\s1
+EXC_BAD \s1
+EXC_BAD PRT \s1
+EXC_BAD \s1
+--
+##suffix
+обогнал \n
+обошел \n
+ADV_GOOD обошел \n
+ADV_GOOD обогнал \n
+--
+##postfix
+EXC_GOOD
+--
+#финиш
+##prefix
+PRT \s1
+\s1
+ADV_GOOD \s1
+ADV_GOOD PRT \s1
+--
+##suffix
+финиширует на поциии \n
+пересекается финишную черту \n-ым
+финиширует \n-ым
+--
+##postfix
+Поздравляем с финишем!
+Он старался.
+Он хорошо показался себя в гонке.
+--
+#
+##prefix
+
+--
+##suffix
+
+--
+##postfix
+
 --

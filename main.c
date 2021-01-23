@@ -129,7 +129,7 @@ int main() {
     BeautifierData *btfData = btfCreateDict();
     btfParseDict("../btfUtils/input.txt", btfData);
 
-    for (int i = 0; i < 20; ++i) {
+    for (int i = 0; i < 60; ++i) {
         char *sentence = getSentence(dict, raceInfo[i].action);
         char *newSentence = beautifySentence(btfData, sentence);
         printf("%s", insertDataIntoSentence(newSentence, &raceInfo[i]));

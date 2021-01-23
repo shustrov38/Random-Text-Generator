@@ -14,7 +14,7 @@ VERB_TAKEOFF гонку с \n позиции
 занимает \n позицию на старте
 --
 ##postfix
-Надеемся, что \s1 ADV_GOOD покажет себя в этой гонке.
+Надеемся, что \s1 ADV_GOOD VERB_SHOW себя в этой гонке.
 \s1 выглядит ADV_GOOD.
 Несмотря на ADJ_BAD_ng выступление в прошлом сезоне, \s1 VERB_WILL VERB_WIN в этом.
 \s1 готов VERB_FIGHT за 1stPRIZE в этом сезоне.
@@ -32,12 +32,12 @@ VERB_OVER \s2 на TURN
 VERB_OVER \s2 в результате MOVE
 VERB_OVER \s2 в результате закономерного MOVE
 ADV_TOUGH VERB_OVER \s2
-ADV_TOUGH VERB_OVER \s2 на повороте
+ADV_TOUGH VERB_OVER \s2 на TURN
 ADV_TOUGH VERB_OVER \s2 в результате закономерного MOVE
 --
 ##postfix
 EXC_GOOD
-\s1 показывает своё мастерство.
+\s1 VERB_SHOW_act своё мастерство.
 \s2 явно не в лучшей форме.
 FIGHT \s1 и \s2 на этом участке трассы законченно.
 --
@@ -55,14 +55,14 @@ ADJ_GOOD_mg \s1
 --
 ##postfix
 Вау!
-\s1 демонстрирует высший пилотаж.
+\s1 VERB_SHOW_act высший пилотаж.
 --
 #ошибка
 ##prefix
-Гонщик \s1
+PRT \s1
 ADV_TOUGH гонщик \s1
 \s1
-Невероятный \s1
+ADJ_GOOD_mg \s1
 --
 ##suffix
 ошибается - \n

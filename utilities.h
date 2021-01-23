@@ -49,5 +49,14 @@ static void freeArray2D(char **t) {
     free(t);
 }
 
+static void freeBtfArray2D(char**t, size_t size)
+{
+    for (int i = 0; i < size; ++i)
+    {
+        freeArray1D(t[i]);
+    }
+    free(t);
+}
+
 
 #endif //RANDOM_TEXT_GENERATOR_UTILITIES_H

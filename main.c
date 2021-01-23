@@ -136,6 +136,7 @@ int main() {
     }
 
     tdDestroy(dict);
+    btfDestroyData(btfData);
 
     return EXIT_SUCCESS;
 }

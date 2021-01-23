@@ -186,7 +186,6 @@ int main() {
     BeautifierData *btfData = btfCreateDict();
     btfParseDict("../btfUtils/input.txt", btfData);
 
-
     char *text = (char *) malloc(1000 * sizeof(char));
     memset(text, 0, 1000);
 

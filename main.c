@@ -110,8 +110,8 @@ char *beautifySentence(BeautifierData *data, char *sentence) {
 }
 
 void marginedPrint(char *filename, char *sentence, int margin) {
-    if (margin > 150) margin = 150;
-    if (margin < 70) margin = 70;
+    if (margin > 90) margin = 90;
+    if (margin < 60) margin = 60;
 
     char **words = createArray2D();
     int wordsLength = 0;
@@ -144,13 +144,13 @@ void marginedPrint(char *filename, char *sentence, int margin) {
             --i;
         }
         int spaces = margin - length;
-        int step = spaces / cnt;
-        if (i == wordsLength && step >= 4) {
-            for (int x = i - cnt; x < i; ++x) {
-                fprintf(out, "%s ", words[x]);
-            }
-            break;
-        }
+        int step = spaces / (cnt - 1);
+//        if (i == wordsLength && step >= 4) {
+//            for (int x = i - cnt; x < i; ++x) {
+//                fprintf(out, "%s ", words[x]);
+//            }
+//            break;
+//        }
         for (int x = i - cnt; x < i; ++x) {
             fprintf(out, "%s", words[x]);
             if (spaces - (cnt - 1)) {

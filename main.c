@@ -208,6 +208,7 @@ int main() {
     marginedPrint("../output.txt", text, 75);
 
     tdDestroy(dict);
+    btfDestroyData(btfData);
 
     return EXIT_SUCCESS;
 }

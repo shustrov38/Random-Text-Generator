@@ -13,7 +13,7 @@
 #define BTF_SYNONYM 1
 
 typedef struct word {
-    char name[50];
+    char *name;
     char **synonyms;
     size_t syn_size;
     char **adjectives;
@@ -40,3 +40,5 @@ void btfParseDict(char *filename, BeautifierData *data);
 void btfPrintDict(BeautifierData *data);
 
 char *btfGetRandDictValue(BeautifierData *dict, char *key, int type);
+
+void btfDestroyData(BeautifierData *dict);

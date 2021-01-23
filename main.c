@@ -113,7 +113,7 @@ char *beautifySentence(BeautifierData *data, char *sentence) {
 }
 
 void marginedPrint(char *filename, char *text, int margin) {
-    if (margin > 90) margin = 90;
+    if (margin > 150) margin = 150;
     if (margin < 60) margin = 60;
 
     char **words = createArray2D();
@@ -205,7 +205,7 @@ int main() {
     }
 
 //    printf("%s", text);
-    marginedPrint("../output.txt", text, 120);
+    marginedPrint("../output.txt", text, 75);
 
     tdDestroy(dict);
 

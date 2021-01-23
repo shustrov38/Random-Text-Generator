@@ -22,7 +22,7 @@ VERB_TAKEOFF гонку с \n позиции
 #обгон
 ##prefix
 Гонщик \s1
-Закономерно PRT \s1
+PRT \s1
 \s1
 ADJ_GOOD_mg \s1
 --
@@ -118,7 +118,7 @@ EXC_GOOD ADJ_GOOD_mg PRT \s1
 и его лучшее время на круге - \n
 --
 ##postfix
-EXC_GOOD.
+EXC_GOOD
 Посмотрим как он пройдет оставшуюся дистанцию.
 Он сегодня хорош.
 --

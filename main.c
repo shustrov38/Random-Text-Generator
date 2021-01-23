@@ -11,7 +11,7 @@
 #include "tdUtils/TemplateDictionary.h"
 #include "btfUtils/beautifier.h"
 
-#define SENTENCE_LENGTH 300
+#define SENTENCE_LENGTH 400
 #define CHANCE_FOR_PHRASE 30
 
 char *getSentence(TemplateDictionary *dict, char *action) {
@@ -108,20 +108,20 @@ char *beautifySentence(BeautifierData *data, char *sentence) {
     return result;
 }
 
-void marginedPrint(char *filename, char *sentence, int margin) {
+void marginedPrint(char *filename, char *text, int margin) {
     if (margin > 90) margin = 90;
     if (margin < 60) margin = 60;
 
     char **words = createArray2D();
     int wordsLength = 0;
 
-    int i = 0, size = (int) strlen(sentence);
+    int i = 0, size = (int) strlen(text);
     while (i < size) {
-        while (i < size && sentence[i] == ' ') ++i;
+        while (i < size && text[i] == ' ') ++i;
         char *word = createArray1D();
         int start = i;
-        while (i < size && sentence[i] != ' ') {
-            word[i - start] = sentence[i];
+        while (i < size && text[i] != ' ') {
+            word[i - start] = text[i];
             ++i;
         }
         copyArray1D(words[wordsLength++], word);
@@ -191,17 +191,17 @@ int main() {
     BeautifierData *btfData = btfCreateDict();
     btfParseDict("../btfUtils/input.txt", btfData);
 
-    char *text = (char *) malloc(1000 * sizeof(char));
-    memset(text, 0, 1000);
+    char *text = (char *) malloc(10000 * sizeof(char));
+    memset(text, 0, 10000);
 
-    for (int i = 0; i < 20; ++i) {
+    for (int i = 0; i < 60; ++i) {
         char *sentence = getSentence(dict, raceInfo[i].action);
         char *sentenceWithData = insertDataIntoSentence(sentence, &raceInfo[i]);
         strcat(text, beautifySentence(btfData, sentenceWithData));
     }
 
 //    printf("%s", text);
-    marginedPrint("../output.txt", text, 70);
+    marginedPrint("../output.txt", text, 120);
 
     tdDestroy(dict);
 

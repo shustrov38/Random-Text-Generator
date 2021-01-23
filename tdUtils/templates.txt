@@ -24,7 +24,7 @@ VERB_TAKEOFF гонку с \n позиции
 Гонщик \s1
 Закономерно PRT \s1
 \s1
-ADJ_GOOD \s1
+ADJ_GOOD_mg \s1
 --
 ##suffix
 VERB_OVER \s2

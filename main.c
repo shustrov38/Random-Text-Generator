@@ -72,7 +72,7 @@ char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
 }
 
 char *beautifySentence(BeautifierData *data, char *sentence) {
-    size_t resultSize = 0;
+    size_t resultLength = 0;
     char *result = (char *) malloc(SENTENCE_LENGTH * sizeof(char));
     memset(result, 0, SENTENCE_LENGTH);
 
@@ -82,7 +82,7 @@ char *beautifySentence(BeautifierData *data, char *sentence) {
     char *word = createArray1D();
     for (int l = 0, r = 0; r < size; ++r) {
         if (strspn(&sentence[r], sep)) {
-            result[resultSize++] = sentence[r];
+            result[resultLength++] = sentence[r];
         } else {
             l = r;
             while (r < size && !strspn(&sentence[r], sep)) r++;
@@ -100,13 +100,70 @@ char *beautifySentence(BeautifierData *data, char *sentence) {
 
             size_t newSize = strlen(synonym);
             for (int i = 0; i < newSize; ++i) {
-                result[resultSize++] = synonym[i];
+                result[resultLength++] = synonym[i];
             }
             r--;
         }
     }
     freeArray1D(word);
     return result;
+}
+
+void marginedPrint(char *filename, char *sentence, int margin) {
+    if (margin > 150) margin = 150;
+    if (margin < 70) margin = 70;
+
+    char **words = createArray2D();
+    int wordsLength = 0;
+
+    int i = 0, size = (int) strlen(sentence);
+    while (i < size) {
+        while (i < size && sentence[i] == ' ') ++i;
+        char *word = createArray1D();
+        int start = i;
+        while (i < size && sentence[i] != ' ') {
+            word[i - start] = sentence[i];
+            ++i;
+        }
+        copyArray1D(words[wordsLength++], word);
+//        printf("%s\n", word);
+    }
+
+    FILE *out = fopen(filename, "w");
+
+    i = 0;
+    while (i < wordsLength) {
+        int length = 0, cnt = 0;
+        while (i < wordsLength && length + cnt - 1 < margin) {
+            ++cnt;
+            length += (int) strlen(words[i++]);
+        }
+        if (length + cnt - 1 > margin) {
+            --cnt;
+            length -= (int) strlen(words[i - 1]);
+            --i;
+        }
+        int spaces = margin - length;
+        int step = spaces / cnt;
+        if (i == wordsLength && step >= 4) {
+            for (int x = i - cnt; x < i; ++x) {
+                fprintf(out, "%s ", words[x]);
+            }
+            break;
+        }
+        for (int x = i - cnt; x < i; ++x) {
+            fprintf(out, "%s", words[x]);
+            if (spaces - (cnt - 1)) {
+                --spaces;
+                fprintf(out, " ");
+            }
+            for (int sp = 0; sp < step; ++sp) {
+                fprintf(out, " ");
+            }
+        }
+        fprintf(out, "\n");
+    }
+    fclose(out);
 }
 
 int main() {
@@ -129,11 +186,18 @@ int main() {
     BeautifierData *btfData = btfCreateDict();
     btfParseDict("../btfUtils/input.txt", btfData);
 
+
+    char *text = (char *) malloc(1000 * sizeof(char));
+    memset(text, 0, 1000);
+
     for (int i = 0; i < 20; ++i) {
         char *sentence = getSentence(dict, raceInfo[i].action);
-        char *newSentence = beautifySentence(btfData, sentence);
-        printf("%s", insertDataIntoSentence(newSentence, &raceInfo[i]));
+        char *sentenceWithData = insertDataIntoSentence(sentence, &raceInfo[i]);
+        strcat(text, beautifySentence(btfData, sentenceWithData));
     }
+
+//    printf("%s", text);
+    marginedPrint("../output.txt", text, 70);
 
     tdDestroy(dict);
 

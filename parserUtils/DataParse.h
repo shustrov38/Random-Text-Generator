@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include "../utilities.h"
 
+#define DPinitSize 50
+
 typedef struct raceInfo {
     int lap;
     char name[MAX_STRING_LENGTH];

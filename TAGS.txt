@@ -6,6 +6,7 @@ ADJ_BAD_mg - плохое прил в м.р.
 ADV_GOOD - хорошее нар.
 ADV_BAD - плохое нар.
 ADV_TOUGH - жоска нар.
+ADV_ACC - неожиданно нар.
 VERB_WILL - гл. волеизъявления
 VERB_WIN - гл. побеждать
 VERB_ERR - гл. ошибки

@@ -8,6 +8,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include "../utilities.h"
 
 #define BTF_ADJECTIVE 0
 #define BTF_SYNONYM 1
@@ -19,13 +20,6 @@ typedef struct word {
     char **adjectives;
     size_t adj_size;
 } BtfWord;
-
-//шаблон ввода
-//#word
-//##synonims
-//...
-//##adjectives
-//...
 
 typedef struct data {
     BtfWord **words;
@@ -41,4 +35,4 @@ void btfPrintDict(BeautifierData *data);
 
 char *btfGetRandDictValue(BeautifierData *dict, char *key, int type);
 
-void btfDestroyData(BeautifierData *dict);
+void btfDestroy(BeautifierData *dict);

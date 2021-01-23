@@ -98,9 +98,6 @@ char *beautifySentence(BeautifierData *data, char *sentence) {
             setLower(word);
             char *synonym = btfGetRandDictValue(data, word, BTF_SYNONYM);
 
-            // got 1st word in sentence
-            if (l == 0) setUpper(synonym);
-
             size_t newSize = strlen(synonym);
             for (int i = 0; i < newSize; ++i) {
                 result[resultLength++] = synonym[i];
@@ -120,14 +117,27 @@ void marginedPrint(char *filename, char *text, int margin) {
     int wordsLength = 0;
 
     int i = 0, size = (int) strlen(text);
+
+    int nextIsUpper= 1;
     while (i < size) {
         while (i < size && text[i] == ' ') ++i;
         char *word = createArray1D();
-        int start = i;
+
+        int pos = i;
         while (i < size && text[i] != ' ') {
-            word[i - start] = text[i];
+            word[i - pos] = text[i];
             ++i;
         }
+
+        if (nextIsUpper) {
+            setUpper(word);
+            nextIsUpper = 0;
+        }
+
+        if (strcspn(word, ".!") != strlen(word)) {
+            nextIsUpper = 1;
+        }
+
         copyArray1D(words[wordsLength++], word);
         freeArray1D(word);
     }
@@ -184,8 +194,8 @@ int main() {
     createAlphabet();
 
     /* Template Dictionary initialization */
-    TemplateDictionary *dict = tdCreateNew();
-    tdLoadData("../tdUtils/templates.txt", dict, 0);
+    TemplateDictionary *tdDict = tdCreateNew();
+    tdLoadData("../tdUtils/templates.txt", tdDict, 0);
 
     /* Input Data Parser initialization */
     RaceInfo *raceInfo = parserCreate();
@@ -193,13 +203,13 @@ int main() {
 
     /* Beautifier Dictionary initialization */
     BeautifierData *btfData = btfCreateDict();
-    btfParseDict("../btfUtils/input.txt", btfData);
+    btfParseDict("../btfUtils/synonyms.txt", btfData);
 
     char *text = (char *) malloc(10000 * sizeof(char));
     memset(text, 0, 10000);
 
     for (int i = 0; i < 60; ++i) {
-        char *sentence = getSentence(dict, raceInfo[i].action);
+        char *sentence = getSentence(tdDict, raceInfo[i].action);
         char *sentenceWithData = insertDataIntoSentence(sentence, &raceInfo[i]);
         strcat(text, beautifySentence(btfData, sentenceWithData));
     }
@@ -207,8 +217,8 @@ int main() {
 //    printf("%s", text);
     marginedPrint("../output.txt", text, 75);
 
-    tdDestroy(dict);
-    btfDestroyData(btfData);
+    tdDestroy(tdDict);
+    btfDestroy(btfData);
 
     return EXIT_SUCCESS;
 }

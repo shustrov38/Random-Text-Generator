@@ -1,5 +1,4 @@
 #include "beautifier.h"
-#include "../utilities.h"
 
 
 BeautifierData *btfCreateDict() {
@@ -16,7 +15,7 @@ void btfMemUpdDict(BeautifierData *data, char *word) {
         data->words = (BtfWord **) realloc(data->words, data->capacity * sizeof(BtfWord *));
     }
     data->words[data->size] = (BtfWord *) malloc(sizeof(BtfWord));
-    data->words[data->size]->name=(char*)malloc(sizeof(char)*50);
+    data->words[data->size]->name = (char *) malloc(sizeof(char) * 50);
     strcpy(data->words[data->size]->name, word);
     data->words[data->size]->synonyms = (char **) malloc(100 * sizeof(char *));
     data->words[data->size]->adjectives = (char **) malloc(100 * sizeof(char *));
@@ -40,7 +39,7 @@ void btfUpdateDictAdj(BeautifierData *data, char *adjective) {
 }
 
 void btfParseDict(char *filename, BeautifierData *data) {
-    FILE *in = fopen("../btfUtils/input.txt", "r");
+    FILE *in = fopen("../btfUtils/synonyms.txt", "r");
 
     char *string = (char *) malloc(50 * sizeof(char));
     int flag = 0;
@@ -119,16 +118,15 @@ char *btfGetRandDictValue(BeautifierData *dict, char *key, int type) {
 //        printf("%s", dict->words[defIndX]->adjectives[j]);
         return dict->words[defIndX]->adjectives[j];
     }
-};
+    return NULL;
+}
 
-    void btfDestroyData(BeautifierData *dict)
-    {
-        for (int i = 0; i < dict->size; ++i)
-        {
-            freeArray1D(dict->words[i]->name);
-            freeBtfArray2D(dict->words[i]->synonyms, dict->words[i]->syn_size);
-            freeBtfArray2D(dict->words[i]->adjectives, dict->words[i]->adj_size);
-        }
-        free(dict);
+void btfDestroy(BeautifierData *dict) {
+    for (int i = 0; i < dict->size; ++i) {
+        freeArray1D(dict->words[i]->name);
+        freeBtfArray2D(dict->words[i]->synonyms, dict->words[i]->syn_size);
+        freeBtfArray2D(dict->words[i]->adjectives, dict->words[i]->adj_size);
     }
+    free(dict);
+}
 

@@ -10,6 +10,7 @@
 #include "parserUtils/DataParse.h"
 #include "tdUtils/TemplateDictionary.h"
 #include "btfUtils/beautifier.h"
+#include "names/nameChanger.h"
 
 #define SENTENCE_LENGTH 400
 #define CHANCE_FOR_PHRASE 30
@@ -208,6 +209,7 @@ int main() {
 
     setlocale(LC_ALL, "Russian");
     createAlphabet();
+    loadNames(0);
 
     /* Template Dictionary initialization */
     TemplateDictionary *tdDict = tdCreateNew();
@@ -221,9 +223,9 @@ int main() {
     BeautifierData *btfData = btfCreateDict();
     btfParseDict("../btfUtils/synonyms.txt", btfData);
 
-    char *text = getText(10000, tdDict, raceInfo, btfData, 0);
+//    char *text = getText(10000, tdDict, raceInfo, btfData, 0);
 
-    marginedPrint("../output.txt", text, 90);
+//    marginedPrint("../output.txt", text, 90);
 
     tdDestroy(tdDict);
     btfDestroy(btfData);

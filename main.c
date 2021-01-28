@@ -73,7 +73,7 @@ char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
                         }
                     }
                 } else {
-                    ++i; ++i;
+                    ++i;
                     if (sentence[i] == 'n' && sentence[i + 1] == 'c') {
                         ++i;
                         char *name = getName(raceInfo->notice[0], NAMES_NC);

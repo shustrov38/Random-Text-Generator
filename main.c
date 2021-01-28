@@ -118,7 +118,7 @@ void marginedPrint(char *filename, char *text, int margin) {
 
     int i = 0, size = (int) strlen(text);
 
-    int nextIsUpper= 1;
+    int nextIsUpper = 1;
     while (i < size) {
         while (i < size && text[i] == ' ') ++i;
         char *word = createArray1D();
@@ -185,6 +185,22 @@ void marginedPrint(char *filename, char *text, int margin) {
     freeArray2D(words);
 }
 
+char *getText(int maxLength, TemplateDictionary *tdDict, RaceInfo *raceInfo, BeautifierData *btfData, int showDebug) {
+    char *text = (char *) malloc(maxLength * sizeof(char));
+    memset(text, 0, maxLength);
+
+    for (int i = 0; i < 60; ++i) {
+        char *template = getSentence(tdDict, raceInfo[i].action);
+        if (showDebug) {
+            printf("%s\n", template);
+        }
+        char *sentenceWithData = insertDataIntoSentence(template, &raceInfo[i]);
+        strcat(text, beautifySentence(btfData, sentenceWithData));
+    }
+
+    return text;
+}
+
 int main() {
     unsigned seed = time(0);
     rand();
@@ -205,17 +221,9 @@ int main() {
     BeautifierData *btfData = btfCreateDict();
     btfParseDict("../btfUtils/synonyms.txt", btfData);
 
-    char *text = (char *) malloc(10000 * sizeof(char));
-    memset(text, 0, 10000);
+    char *text = getText(10000, tdDict, raceInfo, btfData, 0);
 
-    for (int i = 0; i < 60; ++i) {
-        char *sentence = getSentence(tdDict, raceInfo[i].action);
-        char *sentenceWithData = insertDataIntoSentence(sentence, &raceInfo[i]);
-        strcat(text, beautifySentence(btfData, sentenceWithData));
-    }
-
-//    printf("%s", text);
-    marginedPrint("../output.txt", text, 75);
+    marginedPrint("../output.txt", text, 90);
 
     tdDestroy(tdDict);
     btfDestroy(btfData);

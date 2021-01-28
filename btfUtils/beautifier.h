@@ -17,8 +17,7 @@ typedef struct word {
     char *name;
     char **synonyms;
     size_t syn_size;
-    char **adjectives;
-    size_t adj_size;
+    int last_ind;
 } BtfWord;
 
 typedef struct data {

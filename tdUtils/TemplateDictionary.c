@@ -168,16 +168,40 @@ char *tdGetRandomTemplate(TemplateDictionary *dict, char *key, int type) {
     }
 
     if (type == TD_PREFIX) {
+        static int prev_ind_prefix = -1;
+
         if (dict->data[index]->prefixSize == 0) return NULL;
         i = rand() % dict->data[index]->prefixSize;
+
+        if (prev_ind_prefix == i) {
+            i = (i + 1) % dict->data[index]->prefixSize;
+        }
+
+        prev_ind_prefix = i;
         return dict->data[index]->prefix[i];
     } else if (type == TD_SUFFIX) {
+        static int prev_ind_suffix = -1;
+
         if (dict->data[index]->suffixSize == 0) return NULL;
         i = rand() % dict->data[index]->suffixSize;
+
+        if (prev_ind_suffix == i) {
+            i = (i + 1) % dict->data[index]->suffixSize;
+        }
+
+        prev_ind_suffix = i;
         return dict->data[index]->suffix[i];
     } else if (type == TD_POSTFIX) {
+        static int prev_ind_postfix = -1;
+
         if (dict->data[index]->postfixSize == 0) return NULL;
         i = rand() % dict->data[index]->postfixSize;
+
+        if (prev_ind_postfix == i) {
+            i = (i + 1) % dict->data[index]->postfixSize;
+        }
+
+        prev_ind_postfix = i;
         return dict->data[index]->postfix[i];
     } else {
         fprintf(stderr, "Bad type format in {tdGetRandomTemplate}\n");

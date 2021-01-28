@@ -223,16 +223,16 @@ void marginedPrint(char *filename, char *text, int margin) {
     freeArray2D(words);
 }
 
-char *getText(int maxLength, TemplateDictionary *tdDict, RaceInfo *raceInfo, BeautifierData *btfData, int showDebug) {
+char *getText(int maxLength, int rows, TemplateDictionary *tdDict, RaceInfo *raceInfo, BeautifierData *btfData, int showDebug) {
     char *text = (char *) malloc(maxLength * sizeof(char));
     memset(text, 0, maxLength);
 
-    for (int i = 0; i < 60; ++i) {
+    for (int i = 0; i < rows; ++i) {
         char *template = getSentence(tdDict, raceInfo[i].action);
-        if (showDebug) {
-            printf("%s\n", template);
-        }
         char *sentenceWithData = insertDataIntoSentence(template, &raceInfo[i]);
+        if (showDebug) {
+            printf("\n%s\n%s\n", template, sentenceWithData);
+        }
         strcat(text, beautifySentence(btfData, sentenceWithData));
     }
 
@@ -260,7 +260,7 @@ int main() {
     BeautifierData *btfData = btfCreateDict();
     btfParseDict("../btfUtils/synonyms.txt", btfData);
 
-    char *text = getText(10000, tdDict, raceInfo, btfData, 0);
+    char *text = getText(12000, 149, tdDict, raceInfo, btfData, 0);
 
     marginedPrint("../output.txt", text, 90);
 

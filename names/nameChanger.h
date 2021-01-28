@@ -11,7 +11,7 @@
 #define NAMES_DC 1
 #define NAMES_NC 2
 
-#define __CHANCE_FOR_CAT 30
+#define __CHANCE_FOR_CAT 20
 #define __NAMECHANGER_NAME_SIZE 50
 #define __NAMECHANGER_TAG_SIZE 4
 

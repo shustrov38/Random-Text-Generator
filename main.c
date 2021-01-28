@@ -49,14 +49,52 @@ char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
             if (sentence[i] == 's') {
                 ++i;
                 if (sentence[i] == '1') {
-                    size_t nameSize = strlen(raceInfo->name);
-                    for (int j = 0; j < nameSize; ++j) {
-                        result[resultSize++] = raceInfo->name[j];
+                    ++i;
+                    if (sentence[i] == 'n' && sentence[i + 1] == 'c') {
+                        ++i;
+                        char *name = getName(raceInfo->name, NAMES_NC);
+                        size_t nameSize = strlen(name);
+                        for (int j = 0; j < nameSize; ++j) {
+                            result[resultSize++] = name[j];
+                        }
+                    } else if (sentence[i] == 'g' && sentence[i + 1] == 'c') {
+                        ++i;
+                        char *name = getName(raceInfo->name, NAMES_GC);
+                        size_t nameSize = strlen(name);
+                        for (int j = 0; j < nameSize; ++j) {
+                            result[resultSize++] = name[j];
+                        }
+                    } else if (sentence[i] == 'd' && sentence[i + 1] == 'c') {
+                        ++i;
+                        char *name = getName(raceInfo->name, NAMES_DC);
+                        size_t nameSize = strlen(name);
+                        for (int j = 0; j < nameSize; ++j) {
+                            result[resultSize++] = name[j];
+                        }
                     }
                 } else {
-                    size_t nameSize = strlen(raceInfo->notice[0]);
-                    for (int j = 0; j < nameSize; ++j) {
-                        result[resultSize++] = raceInfo->notice[0][j];
+                    ++i; ++i;
+                    if (sentence[i] == 'n' && sentence[i + 1] == 'c') {
+                        ++i;
+                        char *name = getName(raceInfo->notice[0], NAMES_NC);
+                        size_t nameSize = strlen(name);
+                        for (int j = 0; j < nameSize; ++j) {
+                            result[resultSize++] = name[j];
+                        }
+                    } else if (sentence[i] == 'g' && sentence[i + 1] == 'c') {
+                        ++i;
+                        char *name = getName(raceInfo->notice[0], NAMES_GC);
+                        size_t nameSize = strlen(name);
+                        for (int j = 0; j < nameSize; ++j) {
+                            result[resultSize++] = name[j];
+                        }
+                    } else if (sentence[i] == 'd' && sentence[i + 1] == 'c') {
+                        ++i;
+                        char *name = getName(raceInfo->notice[0], NAMES_DC);
+                        size_t nameSize = strlen(name);
+                        for (int j = 0; j < nameSize; ++j) {
+                            result[resultSize++] = name[j];
+                        }
                     }
                 }
             } else if (sentence[i] == 'n') {
@@ -96,7 +134,6 @@ char *beautifySentence(BeautifierData *data, char *sentence) {
                 word[i - l] = sentence[i];
             }
 
-            setLower(word);
             char *synonym = btfGetRandDictValue(data, word, BTF_SYNONYM);
 
             size_t newSize = strlen(synonym);
@@ -223,9 +260,9 @@ int main() {
     BeautifierData *btfData = btfCreateDict();
     btfParseDict("../btfUtils/synonyms.txt", btfData);
 
-//    char *text = getText(10000, tdDict, raceInfo, btfData, 0);
+    char *text = getText(10000, tdDict, raceInfo, btfData, 0);
 
-//    marginedPrint("../output.txt", text, 90);
+    marginedPrint("../output.txt", text, 90);
 
     tdDestroy(tdDict);
     btfDestroy(btfData);

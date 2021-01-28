@@ -1,8 +1,8 @@
 #старт
 ##prefix
-ADJ_GOOD_mg PRT \s1
-PRT \s1
-\s1
+ADJ_GOOD_mg PRT \s1nc
+PRT \s1nc
+\s1nc
 --
 ##suffix
 находится на стартовой позиции \n
@@ -14,39 +14,39 @@ VERB_TAKEOFF гонку с \n позиции
 занимает \n позицию на старте
 --
 ##postfix
-Надеемся, что \s1 ADV_GOOD VERB_SHOW себя в этой гонке.
-\s1 выглядит ADV_GOOD.
-Несмотря на ADJ_BAD_ng выступление в прошлом сезоне, \s1 VERB_WILL VERB_WIN в этом.
-\s1 готов VERB_FIGHT за 1stPRIZE в этом сезоне.
+Надеемся, что \s1nc ADV_GOOD VERB_SHOW себя в этой гонке.
+\s1nc выглядит ADV_GOOD.
+Несмотря на ADJ_BAD_ng выступление в прошлом сезоне, \s1nc VERB_WILL VERB_WIN в этом.
+\s1nc готов VERB_FIGHT за 1stPRIZE в этом сезоне.
 --
 #обгон
 ##prefix
-Гонщик \s1
-PRT \s1
-\s1
-ADJ_GOOD_mg \s1
+Гонщик \s1nc
+PRT \s1nc
+\s1nc
+ADJ_GOOD_mg \s1nc
 --
 ##suffix
-VERB_OVER \s2
-VERB_OVER \s2 на TURN
-VERB_OVER \s2 в результате MOVE
-VERB_OVER \s2 в результате закономерного MOVE
-ADV_TOUGH VERB_OVER \s2
-ADV_TOUGH VERB_OVER \s2 на TURN
-ADV_TOUGH VERB_OVER \s2 в результате закономерного MOVE
+VERB_OVER \s2nc
+VERB_OVER \s2nc на TURN
+VERB_OVER \s2nc в результате MOVE
+VERB_OVER \s2nc в результате закономерного MOVE
+ADV_TOUGH VERB_OVER \s2nc
+ADV_TOUGH VERB_OVER \s2nc на TURN
+ADV_TOUGH VERB_OVER \s2nc в результате закономерного MOVE
 --
 ##postfix
 EXC_GOOD
-\s1 VERB_SHOW_act своё мастерство.
-\s2 явно не в лучшей форме.
-FIGHT \s1 и \s2 на этом участке трассы законченно.
+\s1nc VERB_SHOW_act своё мастерство.
+\s2nc явно не в лучшей форме.
+FIGHT \s1nc и \s2nc на этом участке трассы законченно.
 --
 #перемещ
 ##prefix
-PRT \s1
-Закономерно PRT \s1
-\s1
-ADJ_GOOD_mg \s1
+PRT \s1nc
+Закономерно PRT \s1nc
+\s1nc
+ADJ_GOOD_mg \s1nc
 --
 ##suffix
 перемещается на позицию \n
@@ -55,14 +55,14 @@ ADJ_GOOD_mg \s1
 --
 ##postfix
 Вау!
-\s1 VERB_SHOW_act высший пилотаж.
+\s1nc VERB_SHOW_act высший пилотаж.
 --
 #ошибка
 ##prefix
-PRT \s1
-ADV_TOUGH гонщик \s1
-\s1
-ADJ_GOOD_mg \s1
+PRT \s1nc
+ADV_TOUGH гонщик \s1nc
+\s1nc
+ADJ_GOOD_mg \s1nc
 --
 ##suffix
 ошибается - \n
@@ -73,8 +73,8 @@ EXC_BAD
 --
 #сход
 ##prefix
-PRT \s1
-\s1
+PRT \s1nc
+\s1nc
 --
 ##suffix
 ADV_ACC сходит с трассы \n
@@ -88,8 +88,8 @@ EXC_BAD
 --
 #питстоп
 ##prefix
-PRT \s1
-\s1
+PRT \s1nc
+\s1nc
 --
 ##suffix
 заходит на пит-стоп
@@ -104,13 +104,13 @@ ADV_ACC сворачивает на пит-стоп
 --
 #лучшкруг
 ##prefix
-PRT \s1
-ADJ_GOOD_mg \s1
-ADJ_GOOD_mg PRT \s1
-EXC_GOOD PRT \s1
-EXC_GOOD \s1
-EXC_GOOD ADJ_GOOD_mg \s1
-EXC_GOOD ADJ_GOOD_mg PRT \s1
+PRT \s1nc
+ADJ_GOOD_mg \s1nc
+ADJ_GOOD_mg PRT \s1nc
+EXC_GOOD PRT \s1nc
+EXC_GOOD \s1nc
+EXC_GOOD ADJ_GOOD_mg \s1nc
+EXC_GOOD ADJ_GOOD_mg PRT \s1nc
 --
 ##suffix
 Показыает лучшее время на круге - \n
@@ -124,13 +124,13 @@ EXC_GOOD
 --
 #лидер
 ##prefix
-PRT \s1
-ADJ_GOOD_mg \s1
-ADJ_GOOD_mg PRT \s1
-EXC_GOOD PRT \s1
-EXC_GOOD \s1
-EXC_GOOD ADJ_GOOD_mg \s1
-EXC_GOOD ADJ_GOOD_mg PRT \s1
+PRT \s1nc
+ADJ_GOOD_mg \s1nc
+ADJ_GOOD_mg PRT \s1nc
+EXC_GOOD PRT \s1nc
+EXC_GOOD \s1nc
+EXC_GOOD ADJ_GOOD_mg \s1nc
+EXC_GOOD ADJ_GOOD_mg PRT \s1nc
 --
 ##suffix
 на данный момент является лидером. Его отрыв \n
@@ -161,11 +161,11 @@ EXC_GOOD
 --
 #столкнов
 ##prefix
-PRT \s1
-\s1
-EXC_BAD \s1
-EXC_BAD PRT \s1
-EXC_BAD \s1
+PRT \s1nc
+\s1nc
+EXC_BAD \s1nc
+EXC_BAD PRT \s1nc
+EXC_BAD \s1nc
 --
 ##suffix
 обогнал \n
@@ -178,10 +178,10 @@ EXC_GOOD
 --
 #финиш
 ##prefix
-PRT \s1
-\s1
-ADV_GOOD \s1
-ADV_GOOD PRT \s1
+PRT \s1nc
+\s1nc
+ADV_GOOD \s1nc
+ADV_GOOD PRT \s1nc
 --
 ##suffix
 финиширует на поциии \n

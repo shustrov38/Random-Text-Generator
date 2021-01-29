@@ -23,6 +23,7 @@ char *getSentence(TemplateDictionary *dict, char *action) {
     strcat(result, " ");
     strcat(result, tdGetRandomTemplate(dict, action, TD_SUFFIX));
     strcat(result, ". ");
+
     if (rand() % 101 <= CHANCE_FOR_PHRASE) {
         char *t = createArray1D();
         t = tdGetRandomTemplate(dict, action, TD_POSTFIX);
@@ -206,12 +207,28 @@ void marginedPrint(char *filename, char *text, int margin) {
         }
 
         spaces -= step * (cnt - 1);
-        for (int x = i - cnt; x < i; ++x) {
+
+        // gen places for spaces
+        int *place = (int*)malloc((cnt - 1) * sizeof(int));
+        for (int k = 0; k < cnt - 1; ++k) {
+            place[k] = 0;
+        }
+
+        for (int k = 0; k < spaces; ++k) {
+            int pos = rand() % (cnt - 1);
+            while (place[pos] == 1) {
+                pos = (pos + 1) % (cnt - 1);
+            }
+            place[pos] = 1;
+        }
+
+        // print sentence
+        for (int x = i - cnt, y = 0; x < i; ++x) {
             fprintf(out, "%s", words[x]);
             for (int sp = 0; sp < step; ++sp) {
                 fprintf(out, " ");
             }
-            if (spaces) {
+            if (spaces && place[y++] == 1) {
                 --spaces;
                 fprintf(out, " ");
             }
@@ -223,17 +240,25 @@ void marginedPrint(char *filename, char *text, int margin) {
     freeArray2D(words);
 }
 
-char *getText(int maxLength, int rows, TemplateDictionary *tdDict, RaceInfo *raceInfo, BeautifierData *btfData, int showDebug) {
-    char *text = (char *) malloc(maxLength * sizeof(char));
-    memset(text, 0, maxLength);
+char *getText(TemplateDictionary *tdDict, RaceInfo *raceInfo, BeautifierData *btfData, int showDebug) {
+    int textCap = MAX_STRING_LENGTH;
+    char *text = (char *) malloc(textCap * sizeof(char));
 
-    for (int i = 0; i < rows; ++i) {
+    for (int i = 0; i < parserGetSize(); ++i) {
         char *template = getSentence(tdDict, raceInfo[i].action);
         char *sentenceWithData = insertDataIntoSentence(template, &raceInfo[i]);
+        char *beautifiedSentence = beautifySentence(btfData, sentenceWithData);
+
         if (showDebug) {
-            printf("\n%s\n%s\n", template, sentenceWithData);
+            printf("\n%s\n%s\n", template, beautifiedSentence);
         }
-        strcat(text, beautifySentence(btfData, sentenceWithData));
+
+        if (textCap - strlen(text) <= strlen(beautifiedSentence)) {
+            textCap *= 2;
+            text = (char *) realloc(text, textCap * sizeof(char));
+        }
+
+        strcat(text, beautifiedSentence);
     }
 
     return text;
@@ -260,9 +285,8 @@ int main() {
     BeautifierData *btfData = btfCreateDict();
     btfParseDict("../btfUtils/synonyms.txt", btfData);
 
-    char *text = getText(12000, 149, tdDict, raceInfo, btfData, 0);
-
-    marginedPrint("../output.txt", text, 90);
+    char *text = getText(tdDict, raceInfo, btfData, 0);
+    marginedPrint("../output.txt", text, 110);
 
     tdDestroy(tdDict);
     btfDestroy(btfData);

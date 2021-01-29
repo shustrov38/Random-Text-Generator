@@ -14,7 +14,7 @@ VERB_TAKEOFF с позиции \n
 занимает позицию \n на старте
 --
 ##postfix
-Надеемся, что \s1nc ADV_GOOD VERB_SHOW себя в этой гонке.
+Надеемся, что \s1nc VERB_SHOW себя в этой гонке.
 \s1nc выглядит ADV_GOOD.
 Несмотря на ADJ_BAD_ng выступление в прошлом сезоне, \s1nc VERB_WILL VERB_WIN в этом.
 \s1nc готов VERB_FIGHT за 1stPRIZE в этом сезоне.
@@ -27,19 +27,18 @@ PRT \s1nc
 ADJ_GOOD_mg \s1nc
 --
 ##suffix
-VERB_OVER \s2nc
-VERB_OVER \s2nc на TURN
-VERB_OVER \s2nc в результате MOVE
-VERB_OVER \s2nc в результате ADJ_GOOD_mg_gc MOVE
-ADV_TOUGH VERB_OVER \s2nc
-ADV_TOUGH VERB_OVER \s2nc на TURN
-ADV_TOUGH VERB_OVER \s2nc в результате ADJ_GOOD_mg_gc MOVE
+VERB_OVER \s2gc
+VERB_OVER \s2gc на TURN
+VERB_OVER \s2gc в результате MOVE
+ADV_TOUGH VERB_OVER \s2gc
+ADV_TOUGH VERB_OVER \s2gc на TURN
+ADV_TOUGH VERB_OVER \s2gc в результате ADJ_GOOD_mg_gc MOVE
 --
 ##postfix
 EXC_GOOD
 \s1nc VERB_SHOW_act своё мастерство.
 \s2nc явно не в лучшей форме.
-FIGHT \s1nc и \s2nc на этом участке трассы законченно.
+FIGHT \s1gc и \s2gc на этом участке трассы законченно.
 --
 #перемещ
 ##prefix
@@ -113,8 +112,8 @@ EXC_GOOD ADJ_GOOD_mg \s1nc
 EXC_GOOD ADJ_GOOD_mg PRT \s1nc
 --
 ##suffix
-Показыает лучшее время на круге - \n
-Устанавливает лучшее время на круге - \n
+показыает лучшее время на круге - \n
+устанавливает лучшее время на круге - \n
 и его лучшее время на круге - \n
 --
 ##postfix
@@ -168,13 +167,10 @@ EXC_BAD PRT \s1nc
 EXC_BAD \s1nc
 --
 ##suffix
-обогнал \n
-обошел \n
-ADV_GOOD обошел \n
-ADV_GOOD обогнал \n
+врезался в \s2gc
 --
 ##postfix
-EXC_GOOD
+Какая неудача!
 --
 #финиш
 ##prefix

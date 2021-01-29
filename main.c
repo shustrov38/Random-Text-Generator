@@ -285,7 +285,7 @@ int main() {
     BeautifierData *btfData = btfCreateDict();
     btfParseDict("../btfUtils/synonyms.txt", btfData);
 
-    char *text = getText(tdDict, raceInfo, btfData, 0);
+    char *text = getText(tdDict, raceInfo, btfData, 1);
     marginedPrint("../output.txt", text, 110);
 
     tdDestroy(tdDict);

@@ -162,9 +162,14 @@ void tdLoadData(char *filename, TemplateDictionary *dict, int showDebug) {
 
 char *tdGetRandomTemplate(TemplateDictionary *dict, char *key, int type) {
     int index, contains, i;
+
     contains = find(dict, key, &index);
     if (!contains) {
-        return NULL;
+        char *res = createArray1D();
+        strcat(res, "[key {");
+        strcat(res, key);
+        strcat(res, "} does not exist]");
+        return res;
     }
 
     if (type == TD_PREFIX) {

@@ -1,6 +1,6 @@
 #include "DataParse.h"
 
-int size = 0;
+static int parserSize = 0;
 
 void initStruct(RaceInfo *info) {
     for (int i = 0; i < MAX_ARRAY_LENGTH; ++i) {
@@ -54,16 +54,16 @@ void parserLoadData(char *filename, RaceInfo *parseRace) {
 
         sscanf(curString, "%d%s%s", &curLap, curName, curAct);
 
-        parseRace[size].lap = curLap;
-        strcpy(parseRace[size].name, curName);
-        strcpy(parseRace[size].action, curAct);
+        parseRace[parserSize].lap = curLap;
+        strcpy(parseRace[parserSize].name, curName);
+        strcpy(parseRace[parserSize].action, curAct);
 
 
         int i = 0;
         while (indexNotice != strlen(curString) + 1) {
             if ((curString[indexNotice] == '\t' || curString[indexNotice] == '\n') && i != 0) {
-                strcpy(parseRace[size].notice[parseRace[size].noteSize], curNotice);
-                parseRace[size].noteSize++;
+                strcpy(parseRace[parserSize].notice[parseRace[parserSize].noteSize], curNotice);
+                parseRace[parserSize].noteSize++;
                 i = 0;
                 memset(curNotice, 0, sizeof(curNotice));
             } else {
@@ -76,12 +76,12 @@ void parserLoadData(char *filename, RaceInfo *parseRace) {
             }
         }
 
-        size++;
+        parserSize++;
     }
 
-    size--;
+    parserSize--;
 }
 
 int parserGetSize() {
-    return size;
+    return parserSize;
 }

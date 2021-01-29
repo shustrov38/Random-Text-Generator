@@ -37,81 +37,73 @@ char *getSentence(TemplateDictionary *dict, char *action) {
 }
 
 char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
-    size_t resultSize = 0;
     char *result = (char *) malloc(SENTENCE_LENGTH * sizeof(char));
     memset(result, 0, SENTENCE_LENGTH);
 
-    size_t size = strlen(sentence);
-    for (int i = 0; i < size; ++i) {
-        if (sentence[i] != '\\') {
-            result[resultSize++] = sentence[i];
-        } else {
+    char **words = createArray2D();
+    int wordsLength = 0;
+
+    int i = 0, size = strlen(sentence);
+
+    while (i < size) {
+        while (i < size && sentence[i] == ' ') ++i;
+        char *word = createArray1D();
+
+        int pos = i;
+        while (i < size && sentence[i] != ' ') {
+            word[i - pos] = sentence[i];
             ++i;
-            if (sentence[i] == 's') {
-                ++i;
-                if (sentence[i] == '1') {
-                    ++i;
-                    if (sentence[i] == 'n' && sentence[i + 1] == 'c') {
-                        ++i;
-                        char *name = getName(raceInfo->name, NAMES_NC);
-                        size_t nameSize = strlen(name);
-                        for (int j = 0; j < nameSize; ++j) {
-                            result[resultSize++] = name[j];
-                        }
-                    } else if (sentence[i] == 'g' && sentence[i + 1] == 'c') {
-                        ++i;
-                        char *name = getName(raceInfo->name, NAMES_GC);
-                        size_t nameSize = strlen(name);
-                        for (int j = 0; j < nameSize; ++j) {
-                            result[resultSize++] = name[j];
-                        }
-                    } else if (sentence[i] == 'd' && sentence[i + 1] == 'c') {
-                        ++i;
-                        char *name = getName(raceInfo->name, NAMES_DC);
-                        size_t nameSize = strlen(name);
-                        for (int j = 0; j < nameSize; ++j) {
-                            result[resultSize++] = name[j];
-                        }
-                    }
-                } else {
-                    ++i;
-                    if (sentence[i] == 'n' && sentence[i + 1] == 'c') {
-                        ++i;
-                        char *name = getName(raceInfo->notice[0], NAMES_NC);
-                        size_t nameSize = strlen(name);
-                        for (int j = 0; j < nameSize; ++j) {
-                            result[resultSize++] = name[j];
-                        }
-                    } else if (sentence[i] == 'g' && sentence[i + 1] == 'c') {
-                        ++i;
-                        char *name = getName(raceInfo->notice[0], NAMES_GC);
-                        size_t nameSize = strlen(name);
-                        for (int j = 0; j < nameSize; ++j) {
-                            result[resultSize++] = name[j];
-                        }
-                    } else if (sentence[i] == 'd' && sentence[i + 1] == 'c') {
-                        ++i;
-                        char *name = getName(raceInfo->notice[0], NAMES_DC);
-                        size_t nameSize = strlen(name);
-                        for (int j = 0; j < nameSize; ++j) {
-                            result[resultSize++] = name[j];
-                        }
-                    }
-                }
-            } else if (sentence[i] == 'n') {
-                for (int k = 0; k < raceInfo->noteSize; ++k) {
-                    size_t curNoticeSize = strlen(raceInfo->notice[k]);
-                    for (int j = 0; j < curNoticeSize; ++j) {
-                        result[resultSize++] = raceInfo->notice[k][j];
-                    }
-                    if (raceInfo->noteSize != 1 && k + 1 != raceInfo->noteSize) {
-                        result[resultSize++] = ' ';
-                    }
-                }
-            }
         }
+
+        copyArray1D(words[wordsLength++], word);
+        freeArray1D(word);
     }
 
+    const char sep[] = ".,!-";
+
+    for (i = 0; i < wordsLength; ++i) {
+        int sz = strlen(words[i]);
+        char *ch = (char*)malloc(2 * sizeof(char));
+        memset(ch, ' ', 2);
+
+        for (int k = 0; k < 4; ++k) {
+            if (words[i][sz - 1] == sep[k]) {
+                ch[0] = words[i][sz - 1];
+                words[i][sz - 1] = 0;
+                break;
+            }
+        }
+
+        if (!strcmp(words[i], "\\s1nc")) {
+            strcat(result, getName(raceInfo->name, NAMES_NC));
+        } else if (!strcmp(words[i], "\\s1gc")) {
+            strcat(result, getName(raceInfo->name, NAMES_GC));
+        } else if (!strcmp(words[i], "\\s1dc")) {
+            strcat(result, getName(raceInfo->name, NAMES_DC));
+        } else if (!strcmp(words[i], "\\s2nc")) {
+            strcat(result, getName(raceInfo->notice[0], NAMES_NC));
+        } else if (!strcmp(words[i], "\\s2gc")) {
+            strcat(result, getName(raceInfo->notice[0], NAMES_GC));
+        } else if (!strcmp(words[i], "\\s2dc")) {
+            strcat(result, getName(raceInfo->notice[0], NAMES_DC));
+        } else if (!strcmp(words[i], "\\n")) {
+            for (int k = 0; k < raceInfo->noteSize; ++k) {
+                strcat(result, raceInfo->notice[k]);
+                if (raceInfo->noteSize != 1 && k + 1 != raceInfo->noteSize) {
+                    strcat(result, " ");
+                }
+            }
+        } else if (!strcmp(words[i], "\\n-\\dend")) {
+            int number = atoi(raceInfo->notice[0]);
+            strcat(result, raceInfo->notice[0]);
+            strcat(result, (number == 3 ? "-им" : "-ым"));
+        } else {
+            strcat(result, words[i]);
+        }
+        strcat(result, ch);
+    }
+
+    freeArray2D(words);
     return result;
 }
 
@@ -209,7 +201,7 @@ void marginedPrint(char *filename, char *text, int margin) {
         spaces -= step * (cnt - 1);
 
         // gen places for spaces
-        int *place = (int*)malloc((cnt - 1) * sizeof(int));
+        int *place = (int *) malloc((cnt - 1) * sizeof(int));
         for (int k = 0; k < cnt - 1; ++k) {
             place[k] = 0;
         }
@@ -285,8 +277,8 @@ int main() {
     BeautifierData *btfData = btfCreateDict();
     btfParseDict("../btfUtils/synonyms.txt", btfData);
 
-    char *text = getText(tdDict, raceInfo, btfData, 1);
-    marginedPrint("../output.txt", text, 110);
+    char *text = getText(tdDict, raceInfo, btfData, 0);
+    marginedPrint("../output.txt", text, 90);
 
     tdDestroy(tdDict);
     btfDestroy(btfData);

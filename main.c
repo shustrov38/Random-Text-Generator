@@ -17,6 +17,10 @@
 
 char *getSentence(TemplateDictionary *dict, char *action) {
     char *result = (char *) malloc(SENTENCE_LENGTH * sizeof(char));
+    if (!result) {
+        fprintf(stderr, "Can't allocate memory {getSentence, result}");
+        exit(-1);
+    }
     memset(result, 0, SENTENCE_LENGTH);
 
     strcat(result, tdGetRandomTemplate(dict, action, TD_PREFIX));
@@ -38,6 +42,10 @@ char *getSentence(TemplateDictionary *dict, char *action) {
 
 char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
     char *result = (char *) malloc(SENTENCE_LENGTH * sizeof(char));
+    if (!result) {
+        fprintf(stderr, "Can't allocate memory {insertDataIntoSentence, result}");
+        exit(-1);
+    }
     memset(result, 0, SENTENCE_LENGTH);
 
     char **words = createArray2D();
@@ -118,6 +126,10 @@ char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
 char *beautifySentence(BeautifierData *data, char *sentence) {
     size_t resultLength = 0;
     char *result = (char *) malloc(SENTENCE_LENGTH * sizeof(char));
+    if (!result) {
+        fprintf(stderr, "Can't allocate memory {beautifySentence, result}");
+        exit(-1);
+    }
     memset(result, 0, SENTENCE_LENGTH);
 
     const char sep[] = " .,!-";
@@ -210,6 +222,10 @@ void marginedPrint(char *filename, char *text, int margin) {
 
         // gen places for spaces
         int *place = (int *) malloc((cnt - 1) * sizeof(int));
+        if (!place) {
+            fprintf(stderr, "Can't allocate memory {marginedPrint, place}");
+            exit(-1);
+        }
         for (int k = 0; k < cnt - 1; ++k) {
             place[k] = 0;
         }
@@ -330,6 +346,10 @@ void updateAction(char **positions, RaceInfo *raceInfo) {
 char *getText(TemplateDictionary *tdDict, RaceInfo *raceInfo, BeautifierData *btfData, int showDebug) {
     int textCap = MAX_STRING_LENGTH;
     char *text = (char *) malloc(textCap * sizeof(char));
+    if (!text) {
+        fprintf(stderr, "Can't allocate memory {getText, text}");
+        exit(-1);
+    }
 
     char **positions = createArray2D();
 

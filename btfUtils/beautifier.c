@@ -3,7 +3,15 @@
 
 BeautifierData *btfCreateDict() {
     BeautifierData *data = (BeautifierData *) malloc(sizeof(BeautifierData));
+    if (!data) {
+        fprintf(stderr, "Can't allocate memory {btfCreateDict, data}");
+        exit(-1);
+    }
     data->words = (BtfWord **) malloc(10 * sizeof(BtfWord *));
+    if (!data->words) {
+        fprintf(stderr, "Can't allocate memory {btfCreateDict, data->words}");
+        exit(-1);
+    }
     data->size = 0;
     data->capacity = 1;
     return data;

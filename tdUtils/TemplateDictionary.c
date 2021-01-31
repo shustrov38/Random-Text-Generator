@@ -32,9 +32,17 @@ void freeEntry(Entry *e) {
 
 TemplateDictionary *tdCreateNew() {
     TemplateDictionary *dict = (TemplateDictionary *) malloc(sizeof(TemplateDictionary));
+    if (!dict) {
+        fprintf(stderr, "Can't allocate memory {tdCreateNew, dict}");
+        exit(-1);
+    }
     dict->capacity = DICT_INIT_CAPACITY;
     dict->size = 0;
     dict->data = (Entry **) malloc(dict->capacity * sizeof(Entry *));
+    if (!dict->data) {
+        fprintf(stderr, "Can't allocate memory {tdCreateNew, dict->data}");
+        exit(-1);
+    }
     return dict;
 }
 

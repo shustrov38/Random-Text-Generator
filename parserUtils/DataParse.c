@@ -1,5 +1,6 @@
 #include "DataParse.h"
 
+
 static int parserSize = 0;
 
 void initStruct(RaceInfo *info) {
@@ -14,6 +15,10 @@ void initStruct(RaceInfo *info) {
 
 RaceInfo *parserCreate() {
     RaceInfo *t = (RaceInfo *) malloc(MAX_ARRAY_LENGTH * sizeof(RaceInfo));
+    if (!t) {
+        fprintf(stderr, "Can't allocate memory {parserCreate, t}");
+        exit(-1);
+    }
     initStruct(t);
     return t;
 }

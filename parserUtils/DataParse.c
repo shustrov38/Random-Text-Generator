@@ -48,6 +48,9 @@ int noticeIndex(char s[MAX_STRING_LENGTH]) {
 void parserLoadData(char *filename, RaceInfo *parseRace) {
     FILE *in = fopen(filename, "r");
 
+    // optionally added parameter
+    strcpy(parseRace[parserSize++].action, "начало");
+
     while (!feof(in)) {
         char curString[MAX_STRING_LENGTH];
         int curLap;
@@ -84,7 +87,8 @@ void parserLoadData(char *filename, RaceInfo *parseRace) {
         parserSize++;
     }
 
-    parserSize--;
+    // optionally added parameter
+    strcpy(parseRace[parserSize++].action, "конец");
 }
 
 int parserGetSize() {

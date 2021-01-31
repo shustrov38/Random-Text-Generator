@@ -23,8 +23,12 @@ char *getSentence(TemplateDictionary *dict, char *action) {
     }
     memset(result, 0, SENTENCE_LENGTH);
 
-    strcat(result, tdGetRandomTemplate(dict, action, TD_PREFIX));
-    strcat(result, " ");
+    char *prefix = tdGetRandomTemplate(dict, action, TD_PREFIX);
+    if (prefix != NULL) {
+        strcat(result, prefix);
+        strcat(result, " ");
+    }
+
     strcat(result, tdGetRandomTemplate(dict, action, TD_SUFFIX));
     strcat(result, ". ");
 
@@ -340,6 +344,12 @@ void updateAction(char **positions, RaceInfo *raceInfo) {
         } else {
             strcat(raceInfo->action, "(ост)");
         }
+    } else if (!strcmp(raceInfo->action, "обгон")) {
+        char t[][10] = {"(1)", "(2)"};
+        strcat(raceInfo->action, t[rand() % 2]);
+    } else if (!strcmp(raceInfo->action, "лучшкруг")) {
+        char t[][10] = {"(1)", "(2)"};
+        strcat(raceInfo->action, t[rand() % 2]);
     }
 }
 
@@ -352,6 +362,8 @@ char *getText(TemplateDictionary *tdDict, RaceInfo *raceInfo, BeautifierData *bt
     }
 
     char **positions = createArray2D();
+
+
 
     for (int i = 0; i < parserGetSize(); ++i) {
         updateAction(positions, &raceInfo[i]);
@@ -397,7 +409,7 @@ int main() {
     BeautifierData *btfData = btfCreateDict();
     btfParseDict("../btfUtils/synonyms.txt", btfData, 0);
 
-    char *text = getText(tdDict, raceInfo, btfData, 1);
+    char *text = getText(tdDict, raceInfo, btfData, 0);
     marginedPrint("../output.txt", text, 90);
 
     tdDestroy(tdDict);

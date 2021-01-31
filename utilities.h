@@ -7,7 +7,7 @@
 #include <string.h>
 
 #define MAX_ARRAY_LENGTH 2000
-#define MAX_STRING_LENGTH 500
+#define MAX_STRING_LENGTH 700
 
 static char *createArray1D() {
     int n = MAX_STRING_LENGTH;

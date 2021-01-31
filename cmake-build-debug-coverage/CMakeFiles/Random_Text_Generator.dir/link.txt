@@ -1,3 +1,0 @@
-C:\Users\shust\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\202.6948.80\bin\cmake\win\bin\cmake.exe -E rm -f CMakeFiles\Random_Text_Generator.dir/objects.a
-C:\PROGRA~1\MINGW-~1\X86_64~1.0-P\mingw64\bin\ar.exe cr CMakeFiles\Random_Text_Generator.dir/objects.a @CMakeFiles\Random_Text_Generator.dir\objects1.rsp
-C:\PROGRA~1\MINGW-~1\X86_64~1.0-P\mingw64\bin\gcc.exe --coverage -g   -Wl,--whole-archive CMakeFiles\Random_Text_Generator.dir/objects.a -Wl,--no-whole-archive  -o Random_Text_Generator.exe -Wl,--out-implib,libRandom_Text_Generator.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\Random_Text_Generator.dir\linklibs.rsp

@@ -279,6 +279,8 @@ void updateAction(char **positions, RaceInfo *raceInfo) {
             }
         }
         swapArray1D(positions[first], positions[second]);
+        char t[][10] = {"(1)", "(2)"};
+        strcat(raceInfo->action, t[rand() % 2]);
     } else if (!strcmp(raceInfo->action, "перемещ")) {
         // where 3 possible situations -> see ifs
         int to = atoi(raceInfo->notice[0]);
@@ -344,9 +346,6 @@ void updateAction(char **positions, RaceInfo *raceInfo) {
         } else {
             strcat(raceInfo->action, "(ост)");
         }
-    } else if (!strcmp(raceInfo->action, "обгон")) {
-        char t[][10] = {"(1)", "(2)"};
-        strcat(raceInfo->action, t[rand() % 2]);
     } else if (!strcmp(raceInfo->action, "лучшкруг")) {
         char t[][10] = {"(1)", "(2)"};
         strcat(raceInfo->action, t[rand() % 2]);

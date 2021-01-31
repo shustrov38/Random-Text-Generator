@@ -49,6 +49,14 @@ static void freeArray2D(char **t) {
     free(t);
 }
 
+static void swapArray1D(char *a, char *b) {
+    char *t = createArray1D();
+    copyArray1D(t, a);
+    copyArray1D(a, b);
+    copyArray1D(b, t);
+    freeArray1D(t);
+}
+
 static void freeBtfArray2D(char**t, size_t size)
 {
     for (int i = 0; i < size; ++i)

@@ -59,48 +59,56 @@ char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
         freeArray1D(word);
     }
 
-    const char sep[] = ".,!-";
-
     for (i = 0; i < wordsLength; ++i) {
-        int sz = strlen(words[i]);
-        char *ch = (char*)malloc(2 * sizeof(char));
-        memset(ch, ' ', 2);
-
-        for (int k = 0; k < 4; ++k) {
-            if (words[i][sz - 1] == sep[k]) {
-                ch[0] = words[i][sz - 1];
-                words[i][sz - 1] = 0;
-                break;
-            }
-        }
-
-        if (!strcmp(words[i], "\\s1nc")) {
+        if (strstr(words[i], "\\s1nc")) {
             strcat(result, getName(raceInfo->name, NAMES_NC));
-        } else if (!strcmp(words[i], "\\s1gc")) {
+        } else if (strstr(words[i], "\\s1gc")) {
             strcat(result, getName(raceInfo->name, NAMES_GC));
-        } else if (!strcmp(words[i], "\\s1dc")) {
+        } else if (strstr(words[i], "\\s1dc")) {
             strcat(result, getName(raceInfo->name, NAMES_DC));
-        } else if (!strcmp(words[i], "\\s2nc")) {
+        } else if (strstr(words[i], "\\s2nc")) {
             strcat(result, getName(raceInfo->notice[0], NAMES_NC));
-        } else if (!strcmp(words[i], "\\s2gc")) {
+        } else if (strstr(words[i], "\\s2gc")) {
             strcat(result, getName(raceInfo->notice[0], NAMES_GC));
-        } else if (!strcmp(words[i], "\\s2dc")) {
+        } else if (strstr(words[i], "\\s2dc")) {
             strcat(result, getName(raceInfo->notice[0], NAMES_DC));
-        } else if (!strcmp(words[i], "\\n")) {
+        } else if (strstr(words[i], "\\n-\\dend")) {
+            int number = atoi(raceInfo->notice[0]);
+            strcat(result, raceInfo->notice[0]);
+            strcat(result, (number == 3 ? "-им" : "-ым"));
+        } else if (strstr(words[i], "\\n")) {
             for (int k = 0; k < raceInfo->noteSize; ++k) {
                 strcat(result, raceInfo->notice[k]);
                 if (raceInfo->noteSize != 1 && k + 1 != raceInfo->noteSize) {
                     strcat(result, " ");
                 }
             }
-        } else if (!strcmp(words[i], "\\n-\\dend")) {
-            int number = atoi(raceInfo->notice[0]);
-            strcat(result, raceInfo->notice[0]);
-            strcat(result, (number == 3 ? "-им" : "-ым"));
         } else {
             strcat(result, words[i]);
+            goto spaceOnly;
         }
-        strcat(result, ch);
+
+        int last = strlen(words[i]) - 1;
+        switch (words[i][last]) {
+            case '.':
+                strcat(result, ".");
+                break;
+            case ',':
+                strcat(result, ",");
+                break;
+            case '!':
+                strcat(result, "!");
+                break;
+            case '?':
+                strcat(result, "?");
+                break;
+            case '-':
+                strcat(result, "-");
+                break;
+        }
+
+        spaceOnly:
+        strcat(result, " ");
     }
 
     freeArray2D(words);
@@ -232,11 +240,102 @@ void marginedPrint(char *filename, char *text, int margin) {
     freeArray2D(words);
 }
 
+void updateAction(char **positions, RaceInfo *raceInfo) {
+    static int pSize = 0;
+
+    if (!strcmp(raceInfo->action, "старт")) {
+        // for start just insert name to right position
+        int to = atoi(raceInfo->notice[0]);
+        if (to >= pSize) pSize = to + 1;
+        strcpy(positions[to], raceInfo->name);
+    } else if (!strcmp(raceInfo->action, "обгон")) {
+        // swap two names
+        int first = 0, second = 0;
+        for (int j = 0; j < pSize; ++j) {
+            if (!strcmp(positions[j], raceInfo->name)) {
+                first = j;
+            } else if (!strcmp(positions[j], raceInfo->notice[0])) {
+                second = j;
+            }
+        }
+        swapArray1D(positions[first], positions[second]);
+    } else if (!strcmp(raceInfo->action, "перемещ")) {
+        // where 3 possible situations -> see ifs
+        int to = atoi(raceInfo->notice[0]);
+        if (to >= pSize) pSize = to + 1;
+
+        int j = 0;
+        for (; j < pSize; ++j) {
+            if (!strcmp(positions[j], raceInfo->name)) {
+                break;
+            }
+        }
+
+        if (!strlen(positions[to])) {
+            // move to empty position
+            strcat(raceInfo->action, "(просто)");
+            strcpy(positions[to], raceInfo->name);
+            memset(positions[j], 0, MAX_STRING_LENGTH);
+        } else {
+            if (to < j) {
+                // move upper in position list
+                strcat(raceInfo->action, "(+)");
+
+                int k = to;
+                while (strlen(positions[k++]));
+                if (k >= pSize) pSize = k + 1;
+
+                for (; k != to; --k) {
+                    strcpy(positions[k], positions[k - 1]);
+                }
+
+                strcpy(positions[to], raceInfo->name);
+            } else {
+                // move lower in position list
+                strcat(raceInfo->action, "(-)");
+                if (to >= pSize) pSize = to + 1;
+
+                for (int k = j; k < to; ++k) {
+                    strcpy(positions[k], positions[k + 1]);
+                }
+
+                strcpy(positions[to], raceInfo->name);
+            }
+        }
+    } else if (!strcmp(raceInfo->action, "сход")) {
+        // throw out
+        int j = 0;
+        for (; j < pSize; ++j) {
+            if (!strcmp(positions[j], raceInfo->name)) {
+                break;
+            }
+        }
+
+        for (int k = j; k < pSize - 1; ++k) {
+            strcpy(positions[k], positions[k + 1]);
+        }
+
+        --pSize;
+    } else if (!strcmp(raceInfo->action, "финиш")) {
+        // check winner
+        int number = atoi(raceInfo->notice[0]);
+        if (1 <= number && number <= 3) {
+            strcat(raceInfo->action, "(1-3)");
+        } else {
+            strcat(raceInfo->action, "(ост)");
+        }
+    }
+}
+
 char *getText(TemplateDictionary *tdDict, RaceInfo *raceInfo, BeautifierData *btfData, int showDebug) {
     int textCap = MAX_STRING_LENGTH;
     char *text = (char *) malloc(textCap * sizeof(char));
 
+    char **positions = createArray2D();
+
     for (int i = 0; i < parserGetSize(); ++i) {
+        updateAction(positions, &raceInfo[i]);
+
         char *template = getSentence(tdDict, raceInfo[i].action);
         char *sentenceWithData = insertDataIntoSentence(template, &raceInfo[i]);
         char *beautifiedSentence = beautifySentence(btfData, sentenceWithData);
@@ -253,6 +352,7 @@ char *getText(TemplateDictionary *tdDict, RaceInfo *raceInfo, BeautifierData *bt
         strcat(text, beautifiedSentence);
     }
 
+    freeArray2D(positions);
     return text;
 }
 
@@ -271,11 +371,11 @@ int main() {
 
     /* Input Data Parser initialization */
     RaceInfo *raceInfo = parserCreate();
-    parserLoadData("../RaceInfo.txt", raceInfo);
+    parserLoadData("../protocol.txt", raceInfo);
 
     /* Beautifier Dictionary initialization */
     BeautifierData *btfData = btfCreateDict();
-    btfParseDict("../btfUtils/synonyms.txt", btfData);
+    btfParseDict("../btfUtils/synonyms.txt", btfData, 0);
 
     char *text = getText(tdDict, raceInfo, btfData, 0);
     marginedPrint("../output.txt", text, 90);

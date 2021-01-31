@@ -31,9 +31,7 @@ void btfUpdDictSyn(BeautifierData *data, char *synonym) {
     data->words[data->size - 1]->syn_size++;
 }
 
-
-
-void btfParseDict(char *filename, BeautifierData *data) {
+void btfParseDict(char *filename, BeautifierData *data, int showDebug) {
     FILE *in = fopen("../btfUtils/synonyms.txt", "r");
 
     char *string = (char *) malloc(50 * sizeof(char));
@@ -66,12 +64,15 @@ void btfParseDict(char *filename, BeautifierData *data) {
     }
 
     fclose(in);
+
+    if (showDebug) {
+        btfPrintDict(data);
+    }
 }
 
 void btfPrintDict(BeautifierData *data) {
     for (int i = 0; i < data->size; i++) {
-        printf("%s\n", data->words[i]->name);
-        printf("Synonyms: \n");
+        printf("%s:\n", data->words[i]->name);
         for (int j = 0; j < data->words[i]->syn_size; j++) {
             printf("%s ", data->words[i]->synonyms[j]);
         }

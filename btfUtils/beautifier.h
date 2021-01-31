@@ -28,7 +28,7 @@ typedef struct data {
 
 BeautifierData *btfCreateDict();
 
-void btfParseDict(char *filename, BeautifierData *data);
+void btfParseDict(char *filename, BeautifierData *data, int showDebug);
 
 void btfPrintDict(BeautifierData *data);
 

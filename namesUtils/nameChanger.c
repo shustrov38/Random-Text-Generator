@@ -4,7 +4,7 @@ Name *names;
 static int namesSize = 0, cap = 4;
 
 void loadNames(int showDebug) {
-    FILE *in = fopen("../names/names.txt", "r");
+    FILE *in = fopen("../namesUtils/names.txt", "r");
 
     names = (Name *) malloc(cap * sizeof(Name));
     int locSize = __NAMECHANGER_TAG_SIZE + __NAMECHANGER_NAME_SIZE * 3 + 6;

@@ -10,7 +10,7 @@
 #include "parserUtils/DataParse.h"
 #include "tdUtils/TemplateDictionary.h"
 #include "btfUtils/beautifier.h"
-#include "names/nameChanger.h"
+#include "namesUtils/nameChanger.h"
 
 #define SENTENCE_LENGTH 400
 #define CHANCE_FOR_PHRASE 30
@@ -88,6 +88,11 @@ char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
             int number = atoi(raceInfo->notice[0]);
             strcat(result, raceInfo->notice[0]);
             strcat(result, (number == 3 ? "-טל" : "-ûל"));
+        } else if (strstr(words[i], "\\n-\\cars")) {
+            int number = atoi(raceInfo->notice[0]);
+            char str[6];
+            itoa(number, str, 10);
+            strcat(result, str);
         } else if (strstr(words[i], "\\n")) {
             for (int k = 0; k < raceInfo->noteSize; ++k) {
                 strcat(result, raceInfo->notice[k]);
@@ -116,6 +121,9 @@ char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
                 break;
             case '-':
                 strcat(result, "-");
+                break;
+            case ':':
+                strcat(result, ":");
                 break;
         }
 
@@ -211,7 +219,13 @@ void marginedPrint(char *filename, char *text, int margin) {
             length -= (int) strlen(words[i - 1]);
             --i;
         }
+
         int spaces = margin - length;
+
+        if (cnt == 1) {
+            break;
+        }
+
         int step = spaces / (cnt - 1);
 
         // last stroke
@@ -255,8 +269,8 @@ void marginedPrint(char *filename, char *text, int margin) {
         }
         fprintf(out, "\n");
     }
-    fclose(out);
 
+    fclose(out);
     freeArray2D(words);
 }
 
@@ -269,7 +283,7 @@ void updateAction(char **positions, RaceInfo *raceInfo) {
         if (to >= pSize) pSize = to + 1;
         strcpy(positions[to], raceInfo->name);
     } else if (!strcmp(raceInfo->action, "מבדמם")) {
-        // swap two names
+        // swap two namesUtils
         int first = 0, second = 0;
         for (int j = 0; j < pSize; ++j) {
             if (!strcmp(positions[j], raceInfo->name)) {
@@ -362,10 +376,11 @@ char *getText(TemplateDictionary *tdDict, RaceInfo *raceInfo, BeautifierData *bt
 
     char **positions = createArray2D();
 
-
-
     for (int i = 0; i < parserGetSize(); ++i) {
         updateAction(positions, &raceInfo[i]);
+        if (i + 1 == parserGetSize()) {
+            strcpy(raceInfo[i].name, positions[1]);
+        }
 
         char *template = getSentence(tdDict, raceInfo[i].action);
         char *sentenceWithData = insertDataIntoSentence(template, &raceInfo[i]);
@@ -408,7 +423,7 @@ int main() {
     BeautifierData *btfData = btfCreateDict();
     btfParseDict("../btfUtils/synonyms.txt", btfData, 0);
 
-    char *text = getText(tdDict, raceInfo, btfData, 1);
+    char *text = getText(tdDict, raceInfo, btfData, 0);
     marginedPrint("../output.txt", text, 90);
 
     tdDestroy(tdDict);

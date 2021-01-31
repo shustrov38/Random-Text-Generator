@@ -43,9 +43,9 @@ FIGHT \s1gc и \s2gc на этом участке трассы законченно.
 #ошибка
 ##prefix
 PRT \s1nc
-ADV_TOUGH гонщик \s1nc
 \s1nc
-ADJ_GOOD_mg \s1nc
+  сожалению, \s1nc
+\s1dc не везет, он
 --
 ##suffix
 ошибаетс€ - \n
@@ -154,7 +154,7 @@ EXC_BAD \s1nc
 врезалс€ в \s2gc
 --
 ##postfix
- ака€ неудача!
+Ќе повезло.
 --
 #пейскар
 ##prefix
@@ -174,7 +174,7 @@ Cмотрите,
 EXC_BAD,
 --
 ##suffix
-у \s1nc
+у \s1gc
 \s1nc вынужден остановитс€, у него
 --
 ##postfix
@@ -199,9 +199,9 @@ EXC_BAD
 √онка оживл€етс€.
 --
 ##suffix
-ADJ_GOOD_nc PRT \s1nc VERB_SHOW_act ADJ_GOOD_nc MOVE и ADV_TOUGH врываетс€ на позицию \n
-ADJ_GOOD_nc \s1nc переходит на место \n
-PRT \s1nc VERB_SHOW_act ADJ_GOOD_nc MOVE и ADV_TOUGH врываетс€ на позицию \n
+ADJ_GOOD_mg_nc PRT \s1nc VERB_SHOW_act ADJ_GOOD_mg_nc MOVE и ADV_TOUGH врываетс€ на позицию \n
+ADJ_GOOD_mg_nc \s1nc переходит на место \n
+PRT \s1nc VERB_SHOW_act ADJ_GOOD_mg_nc MOVE и ADV_TOUGH врываетс€ на позицию \n
 \s1nc переходит на место \n
 --
 ##postfix
@@ -211,8 +211,6 @@ EXC_GOOD
 ##prefix
 PRT \s1nc
 \s1nc
-ADV_GOOD \s1nc
-ADV_GOOD PRT \s1nc
 --
 ##suffix
 вынужден переместитьс€ на позицию \n
@@ -251,6 +249,6 @@ PRT \s1nc
 --
 ##postfix
 ќн старалс€...
-ќн ADV_BAD VERB_SHOW_act себ€ в гонке.
+ќн ADV_BAD показал себ€ в гонке.
 
 --

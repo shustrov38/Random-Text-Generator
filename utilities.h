@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_ARRAY_LENGTH 2000
-#define MAX_STRING_LENGTH 700
+#define MAX_ARRAY_LENGTH 1500
+#define MAX_STRING_LENGTH 600
 
 static char *createArray1D() {
     int n = MAX_STRING_LENGTH;
@@ -39,6 +39,7 @@ static void copyArray2D(char **dst, char **src) {
 
 static void freeArray1D(char *t) {
     free(t);
+    t = NULL;
 }
 
 static void freeArray2D(char **t) {

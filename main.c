@@ -12,50 +12,70 @@
 #include "btfUtils/beautifier.h"
 #include "namesUtils/nameChanger.h"
 
-#define SENTENCE_LENGTH 400
 #define CHANCE_FOR_PHRASE 30
 
 char *getSentence(TemplateDictionary *dict, char *action) {
-    char *result = (char *) malloc(SENTENCE_LENGTH * sizeof(char));
+    int capacity = MAX_ARRAY_LENGTH;
+    char *result = (char *) malloc(capacity * sizeof(char));
     if (!result) {
         fprintf(stderr, "Can't allocate memory {getSentence, result}");
         exit(-1);
     }
-    memset(result, 0, SENTENCE_LENGTH);
+    memset(result, 0, capacity);
 
     char *prefix = tdGetRandomTemplate(dict, action, TD_PREFIX);
     if (prefix != NULL) {
+        if (capacity - strlen(result) <= strlen(prefix)) {
+            capacity *= 2;
+            result = (char *) realloc(result, capacity * sizeof(char));
+        }
         strcat(result, prefix);
         strcat(result, " ");
+        prefix = NULL;
     }
 
-    strcat(result, tdGetRandomTemplate(dict, action, TD_SUFFIX));
-    strcat(result, ". ");
+    char *suffix = tdGetRandomTemplate(dict, action, TD_SUFFIX);
+    if (suffix != NULL) {
+        if (capacity - strlen(result) <= strlen(suffix)) {
+            capacity *= 2;
+            result = (char *) realloc(result, capacity * sizeof(char));
+        }
+        strcat(result, suffix);
+        strcat(result, ". ");
+        suffix = NULL;
+    }
 
     if (rand() % 101 <= CHANCE_FOR_PHRASE) {
-        char *t = createArray1D();
-        t = tdGetRandomTemplate(dict, action, TD_POSTFIX);
-        if (t != NULL) {
-            strcat(result, t);
+
+        char *postfix = tdGetRandomTemplate(dict, action, TD_POSTFIX);
+        if (prefix != NULL) {
+            if (capacity - strlen(result) <= strlen(postfix)) {
+                capacity *= 2;
+                result = (char *) realloc(result, capacity * sizeof(char));
+            }
+            strcat(result, postfix);
             strcat(result, " ");
+            postfix = NULL;
         }
+
     }
 
     return result;
 }
 
 char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
-    char *result = (char *) malloc(SENTENCE_LENGTH * sizeof(char));
-    if (!result) {
+    int capacity = MAX_ARRAY_LENGTH;
+    char *result = NULL;
+    if (!(result = (char *) malloc(capacity * sizeof(char)))) {
         fprintf(stderr, "Can't allocate memory {insertDataIntoSentence, result}");
         exit(-1);
     }
-    memset(result, 0, SENTENCE_LENGTH);
+    memset(result, 0, capacity);
 
     char **words = createArray2D();
     int wordsLength = 0;
 
-    int i = 0, size = strlen(sentence);
+    int i = 0, size = (int)strlen(sentence);
 
     while (i < size) {
         while (i < size && sentence[i] == ' ') ++i;
@@ -72,6 +92,11 @@ char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
     }
 
     for (i = 0; i < wordsLength; ++i) {
+        if (capacity - strlen(result) <= MAX_STRING_LENGTH) {
+            capacity *= 2;
+            result = (char *) realloc(result, capacity * sizeof(char));
+        }
+
         if (strstr(words[i], "\\s1nc")) {
             strcat(result, getName(raceInfo->name, NAMES_NC));
         } else if (strstr(words[i], "\\s1gc")) {
@@ -105,27 +130,15 @@ char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
             goto spaceOnly;
         }
 
-        int last = strlen(words[i]) - 1;
-        switch (words[i][last]) {
-            case '.':
-                strcat(result, ".");
-                break;
-            case ',':
-                strcat(result, ",");
-                break;
-            case '!':
-                strcat(result, "!");
-                break;
-            case '?':
-                strcat(result, "?");
-                break;
-            case '-':
-                strcat(result, "-");
-                break;
-            case ':':
-                strcat(result, ":");
-                break;
-        }
+        int last = (int)strlen(words[i]) - 1;
+        if (words[i][last] == '.') strcat(result, ".");
+        else if (words[i][last] == ',') strcat(result, ".");
+        else if (words[i][last] == '!') strcat(result, ".");
+        else if (words[i][last] == '?') strcat(result, ".");
+        else if (words[i][last] == '-') strcat(result, ".");
+        else if (words[i][last] == ':') strcat(result, ".");
+        else if (words[i][last] == '"') strcat(result, "\"");
+        else if (words[i][last] == '.') strcat(result, ".");
 
         spaceOnly:
         strcat(result, " ");
@@ -136,38 +149,47 @@ char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
 }
 
 char *beautifySentence(BeautifierData *data, char *sentence) {
-    size_t resultLength = 0;
-    char *result = (char *) malloc(SENTENCE_LENGTH * sizeof(char));
-    if (!result) {
+    int resultLength = 0;
+    int capacity = MAX_STRING_LENGTH;
+    char *result = NULL;
+    if (!(result = (char *) malloc(capacity * sizeof(char)))) {
         fprintf(stderr, "Can't allocate memory {beautifySentence, result}");
         exit(-1);
     }
-    memset(result, 0, SENTENCE_LENGTH);
+    memset(result, 0, capacity);
 
     const char sep[] = " .,!-";
 
-    size_t size = strlen(sentence);
+    int size = (int)strlen(sentence);
     char *word = createArray1D();
-    for (int l = 0, r = 0; r < size; ++r) {
+
+    for (int l, r = 0; r < size; ++r) {
+        if (capacity == resultLength) {
+            capacity *= 2;
+            result = (char *) realloc(result, capacity * sizeof(char));
+        }
+
         if (strspn(&sentence[r], sep)) {
             result[resultLength++] = sentence[r];
         } else {
             l = r;
             while (r < size && !strspn(&sentence[r], sep)) r++;
-            memset(word, 0, 30 * sizeof(char));
+            memset(word, 0, MAX_STRING_LENGTH);
             for (int i = l; i < r; ++i) {
                 word[i - l] = sentence[i];
             }
 
             char *synonym = btfGetRandDictValue(data, word, BTF_SYNONYM);
 
-            size_t newSize = strlen(synonym);
+            int newSize = (int)strlen(synonym);
             for (int i = 0; i < newSize; ++i) {
                 result[resultLength++] = synonym[i];
             }
             r--;
+            synonym = NULL;
         }
     }
+
     freeArray1D(word);
     return result;
 }
@@ -268,6 +290,7 @@ void marginedPrint(char *filename, char *text, int margin) {
             }
         }
         fprintf(out, "\n");
+        free(place);
     }
 
     fclose(out);
@@ -367,9 +390,9 @@ void updateAction(char **positions, RaceInfo *raceInfo) {
 }
 
 char *getText(TemplateDictionary *tdDict, RaceInfo *raceInfo, BeautifierData *btfData, int showDebug) {
-    int textCap = MAX_STRING_LENGTH;
-    char *text = (char *) malloc(textCap * sizeof(char));
-    if (!text) {
+    int capacity = MAX_STRING_LENGTH;
+    char *text = NULL;
+    if (!(text = (char *) malloc(capacity * sizeof(char)))) {
         fprintf(stderr, "Can't allocate memory {getText, text}");
         exit(-1);
     }
@@ -390,12 +413,16 @@ char *getText(TemplateDictionary *tdDict, RaceInfo *raceInfo, BeautifierData *bt
             printf("\n%s\n%s\n", template, beautifiedSentence);
         }
 
-        if (textCap - strlen(text) <= strlen(beautifiedSentence)) {
-            textCap *= 2;
-            text = (char *) realloc(text, textCap * sizeof(char));
+        if (capacity - strlen(text) <= strlen(beautifiedSentence)) {
+            capacity *= 2;
+            text = (char *) realloc(text, capacity * sizeof(char));
         }
 
         strcat(text, beautifiedSentence);
+
+        free(template);
+        free(sentenceWithData);
+        free(beautifiedSentence);
     }
 
     freeArray2D(positions);
@@ -426,6 +453,7 @@ int main() {
     char *text = getText(tdDict, raceInfo, btfData, 0);
     marginedPrint("../output.txt", text, 90);
 
+    freeArray1D(text);
     tdDestroy(tdDict);
     btfDestroy(btfData);
 

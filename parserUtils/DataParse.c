@@ -5,9 +5,9 @@ static int parserSize = 0;
 
 void initStruct(RaceInfo *info) {
     for (int i = 0; i < MAX_ARRAY_LENGTH; ++i) {
-        info[i].action;
-        info[i].name;
-        info[i].notice;
+        memset(info[i].action, 0, MAX_STRING_LENGTH);
+        memset(info[i].name, 0, MAX_STRING_LENGTH);
+        memset(info[i].notice, 0, MAX_STRING_LENGTH);
         info[i].lap = 0;
         info[i].noteSize = 0;
     }

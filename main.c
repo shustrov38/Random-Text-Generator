@@ -396,6 +396,7 @@ char *getText(TemplateDictionary *tdDict, RaceInfo *raceInfo, BeautifierData *bt
         fprintf(stderr, "Can't allocate memory {getText, text}");
         exit(-1);
     }
+    memset(text, 0, capacity);
 
     char **positions = createArray2D();
 
@@ -451,11 +452,11 @@ int main() {
     btfParseDict("../btfUtils/synonyms.txt", btfData, 0);
 
     char *text = getText(tdDict, raceInfo, btfData, 0);
-    marginedPrint("../output.txt", text, 90);
-
-    freeArray1D(text);
     tdDestroy(tdDict);
     btfDestroy(btfData);
+
+    marginedPrint("../output.txt", text, 90);
+    free(text);
 
     return EXIT_SUCCESS;
 }

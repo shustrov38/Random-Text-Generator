@@ -432,11 +432,12 @@ char *getText(TemplateDictionary *tdDict, RaceInfo *raceInfo, BeautifierData *bt
         char *sentenceWithData = insertDataIntoSentence(template, &raceInfo[i]);
 
         // conditions to add beginning
-        int addBeg = (rand() % 101 <= 40) && (i != 0) && (i + 1 != parserGetSize());
+        int addBeg = (rand() % 101 <= 50) && (i != 0) && (i + 1 != parserGetSize());
         if (strstr(raceInfo[i].action, "лидер")) addBeg = 0;
         if (strstr(raceInfo[i].action, "пейскар")) addBeg = 0;
         if (strstr(raceInfo[i].action, "лучшкруг")) addBeg = 0;
         if (strstr(raceInfo[i].action, "проблема")) addBeg = 0;
+        if (strstr(raceInfo[i].action, "старт")) addBeg = 0;
         char *sentenceWithBeginning = addBeginningToSentence(sentenceWithData, addBeg);
 
         char *beautifiedSentence = beautifySentence(btfData, sentenceWithBeginning);

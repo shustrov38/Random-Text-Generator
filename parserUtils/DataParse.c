@@ -7,7 +7,10 @@ void initStruct(RaceInfo *info) {
     for (int i = 0; i < MAX_ARRAY_LENGTH; ++i) {
         memset(info[i].action, 0, MAX_STRING_LENGTH);
         memset(info[i].name, 0, MAX_STRING_LENGTH);
-        memset(info[i].notice, 0, MAX_STRING_LENGTH);
+        memset(info[i].notice, 0, MAX_ARRAY_LENGTH);
+        for (int j = 0; j < MAX_ARRAY_LENGTH; ++j) {
+            memset(info[i].notice[j], 0, MAX_STRING_LENGTH);
+        }
         info[i].lap = 0;
         info[i].noteSize = 0;
     }
@@ -65,7 +68,6 @@ void parserLoadData(char *filename, RaceInfo *parseRace) {
         parseRace[parserSize].lap = curLap;
         strcpy(parseRace[parserSize].name, curName);
         strcpy(parseRace[parserSize].action, curAct);
-
 
         int i = 0;
         while (indexNotice != strlen(curString) + 1) {

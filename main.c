@@ -15,7 +15,7 @@
 #define CHANCE_FOR_PHRASE 30
 
 char *getSentence(TemplateDictionary *dict, char *action) {
-    int capacity = MAX_ARRAY_LENGTH;
+    int capacity = MAX_STRING_LENGTH;
     char *result = (char *) malloc(capacity * sizeof(char));
     if (!result) {
         fprintf(stderr, "Can't allocate memory {getSentence, result}");
@@ -64,7 +64,7 @@ char *getSentence(TemplateDictionary *dict, char *action) {
 }
 
 char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
-    int capacity = MAX_ARRAY_LENGTH;
+    int capacity = MAX_STRING_LENGTH;
     char *result = NULL;
     if (!(result = (char *) malloc(capacity * sizeof(char)))) {
         fprintf(stderr, "Can't allocate memory {insertDataIntoSentence, result}");
@@ -145,6 +145,28 @@ char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
     }
 
     freeArray2D(words);
+    return result;
+}
+
+char *addBeginningToSentence(char *sentence, int flag) {
+    int capacity = MAX_STRING_LENGTH;
+    char *result = NULL;
+    if (!(result = (char *) malloc(capacity * sizeof(char)))) {
+        fprintf(stderr, "Can't allocate memory {addBeginningIntoSentence, result}");
+        exit(-1);
+    }
+    memset(result, 0, capacity);
+
+    if (flag) {
+        strcat(result, "LOGIC_CON ");
+    }
+
+    if (capacity - strlen(result) <= strlen(sentence)) {
+        capacity *= 2;
+        result = (char *) realloc(result, capacity * sizeof(char));
+    }
+    strcat(result, sentence);
+
     return result;
 }
 
@@ -408,7 +430,16 @@ char *getText(TemplateDictionary *tdDict, RaceInfo *raceInfo, BeautifierData *bt
 
         char *template = getSentence(tdDict, raceInfo[i].action);
         char *sentenceWithData = insertDataIntoSentence(template, &raceInfo[i]);
-        char *beautifiedSentence = beautifySentence(btfData, sentenceWithData);
+
+        // conditions to add beginning
+        int addBeg = (rand() % 101 <= 40) && (i != 0) && (i + 1 != parserGetSize());
+        if (strstr(raceInfo[i].action, "лидер")) addBeg = 0;
+        if (strstr(raceInfo[i].action, "пейскар")) addBeg = 0;
+        if (strstr(raceInfo[i].action, "лучшкруг")) addBeg = 0;
+        if (strstr(raceInfo[i].action, "проблема")) addBeg = 0;
+        char *sentenceWithBeginning = addBeginningToSentence(sentenceWithData, addBeg);
+
+        char *beautifiedSentence = beautifySentence(btfData, sentenceWithBeginning);
 
         if (showDebug) {
             printf("\n%s\n%s\n", template, beautifiedSentence);
@@ -423,6 +454,7 @@ char *getText(TemplateDictionary *tdDict, RaceInfo *raceInfo, BeautifierData *bt
 
         free(template);
         free(sentenceWithData);
+        free(sentenceWithBeginning);
         free(beautifiedSentence);
     }
 

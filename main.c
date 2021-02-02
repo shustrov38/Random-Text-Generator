@@ -132,13 +132,12 @@ char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
 
         int last = (int)strlen(words[i]) - 1;
         if (words[i][last] == '.') strcat(result, ".");
-        else if (words[i][last] == ',') strcat(result, ".");
-        else if (words[i][last] == '!') strcat(result, ".");
-        else if (words[i][last] == '?') strcat(result, ".");
-        else if (words[i][last] == '-') strcat(result, ".");
-        else if (words[i][last] == ':') strcat(result, ".");
+        else if (words[i][last] == ',') strcat(result, ",");
+        else if (words[i][last] == '!') strcat(result, "!");
+        else if (words[i][last] == '?') strcat(result, "?");
+        else if (words[i][last] == '-') strcat(result, "-");
+        else if (words[i][last] == ':') strcat(result, ":");
         else if (words[i][last] == '"') strcat(result, "\"");
-        else if (words[i][last] == '.') strcat(result, ".");
 
         spaceOnly:
         strcat(result, " ");

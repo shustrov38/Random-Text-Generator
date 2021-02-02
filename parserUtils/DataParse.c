@@ -75,7 +75,7 @@ void parserLoadData(char *filename, RaceInfo *parseRace) {
                 strcpy(parseRace[parserSize].notice[parseRace[parserSize].noteSize], curNotice);
                 parseRace[parserSize].noteSize++;
                 i = 0;
-                memset(curNotice, 0, sizeof(curNotice));
+                memset(curNotice, 0, MAX_STRING_LENGTH);
             } else {
                 if (i == 0) {
                     indexNotice++;

@@ -126,6 +126,11 @@ char *insertDataIntoSentence(char *sentence, RaceInfo *raceInfo) {
                     strcat(result, " ");
                 }
             }
+        } else if (strstr(words[i], "\\rand")) {
+            int number = 1 + rand() % 10;
+            char str[6];
+            itoa(number, str, 10);
+            strcat(result, str);
         } else {
             strcat(result, words[i]);
             goto spaceOnly;
@@ -325,6 +330,9 @@ void updateAction(char **positions, RaceInfo *raceInfo) {
     if (!strcmp(raceInfo->action, "старт")) {
         // for start just insert name to right position
         int to = atoi(raceInfo->notice[0]);
+        if (to <= 3) {
+            strcat(raceInfo->action, "(хороший)");
+        }
         if (to >= pSize) pSize = to + 1;
         strcpy(positions[to], raceInfo->name);
     } else if (!strcmp(raceInfo->action, "обгон")) {

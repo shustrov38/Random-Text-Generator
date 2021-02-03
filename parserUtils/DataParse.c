@@ -54,10 +54,15 @@ void parserLoadData(char *filename, RaceInfo *parseRace) {
     // optionally added parameter
     strcpy(parseRace[parserSize++].action, "начало");
 
+    char curString[MAX_STRING_LENGTH];
+    int curLap;
+    char curName[MAX_STRING_LENGTH], curAct[MAX_STRING_LENGTH], curNotice[MAX_STRING_LENGTH];
+
     while (!feof(in)) {
-        char curString[MAX_STRING_LENGTH];
-        int curLap;
-        char curName[MAX_STRING_LENGTH], curAct[MAX_STRING_LENGTH], curNotice[MAX_STRING_LENGTH];
+        memset(curAct, 0, MAX_STRING_LENGTH);
+        memset(curName, 0, MAX_STRING_LENGTH);
+        memset(curNotice, 0, MAX_STRING_LENGTH);
+
         fgets(curString, MAX_STRING_LENGTH, in);
 
         //1st variant of Parser
@@ -85,12 +90,13 @@ void parserLoadData(char *filename, RaceInfo *parseRace) {
                 ++indexNotice;
             }
         }
-
-        parserSize++;
+        ++parserSize;
     }
 
     // optionally added parameter
     strcpy(parseRace[parserSize++].action, "конец");
+
+    fclose(in);
 }
 
 int parserGetSize() {

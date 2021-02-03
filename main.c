@@ -13,6 +13,7 @@
 #include "namesUtils/nameChanger.h"
 
 #define CHANCE_FOR_PHRASE 30
+#define CHANCE_FOR_BEGINNING 70
 
 char *getSentence(TemplateDictionary *dict, char *action) {
     int capacity = MAX_STRING_LENGTH;
@@ -431,7 +432,7 @@ char *getText(TemplateDictionary *tdDict, RaceInfo *raceInfo, BeautifierData *bt
         char *sentenceWithData = insertDataIntoSentence(template, &raceInfo[i]);
 
         // conditions to add beginning
-        int addBeg = (rand() % 101 <= 50) && (i != 0) && (i + 1 != parserGetSize());
+        int addBeg = (rand() % 101 <= CHANCE_FOR_BEGINNING) && (i != 0) && (i + 1 != parserGetSize());
         if (strstr(raceInfo[i].action, "старт")) addBeg = 0;
         if (strstr(raceInfo[i].action, "лидер")) addBeg = 0;
         if (strstr(raceInfo[i].action, "пейскар")) addBeg = 0;

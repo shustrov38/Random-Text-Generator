@@ -408,6 +408,9 @@ void updateAction(char **positions, RaceInfo *raceInfo) {
     } else if (!strcmp(raceInfo->action, "финиш")) {
         // check winner
         int number = atoi(raceInfo->notice[0]);
+        if (number == 1) {
+            strcpy(positions[0], raceInfo->name);
+        }
         if (1 <= number && number <= 3) {
             strcat(raceInfo->action, "(1-3)");
         } else {
@@ -433,7 +436,7 @@ char *getText(TemplateDictionary *tdDict, RaceInfo *raceInfo, BeautifierData *bt
     for (int i = 0; i < parserGetSize(); ++i) {
         updateAction(positions, &raceInfo[i]);
         if (i + 1 == parserGetSize()) {
-            strcpy(raceInfo[i].name, positions[1]);
+            strcpy(raceInfo[i].name, positions[0]);
         }
 
         char *template = getSentence(tdDict, raceInfo[i].action);

@@ -26,7 +26,7 @@ RaceInfo *parserCreate() {
     return t;
 }
 
-int noticeIndex(char s[MAX_STRING_LENGTH]) {
+int noticeIndex(char *s) {
     int i = 0, count = 0;
     while (count != 3) {
         while ((s[i] == '\t' || s[i] == ' ') && s[i] != '\n') {
@@ -50,6 +50,11 @@ int noticeIndex(char s[MAX_STRING_LENGTH]) {
 
 void parserLoadData(char *filename, RaceInfo *parseRace) {
     FILE *in = fopen(filename, "r");
+
+    if (!in) {
+        fprintf(stderr, "Can't open file {parserLoadData, in}");
+        exit(-1);
+    }
 
     // optionally added parameter
     strcpy(parseRace[parserSize++].action, "начало");
@@ -92,6 +97,7 @@ void parserLoadData(char *filename, RaceInfo *parseRace) {
         }
         ++parserSize;
     }
+    --parserSize;
 
     // optionally added parameter
     strcpy(parseRace[parserSize++].action, "конец");

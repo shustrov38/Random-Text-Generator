@@ -499,7 +499,7 @@ int main() {
     tdDestroy(tdDict);
     btfDestroy(btfData);
 
-    marginedPrint("../output.txt", text, 90);
+    marginedPrint("../output.txt", text, 100);
     free(text);
 
     return EXIT_SUCCESS;
